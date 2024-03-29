@@ -1,13 +1,21 @@
-import express from 'express';
-import morgan from 'morgan';
+import express from 'express'
+import morgan from 'morgan'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
-import authRouter from './routes/auth.routes.js';
+import authRouter from './routes/auth.routes.js'
 
-const app = express();
 
-app.use(morgan('dev'));
-app.use(express.json());
+const app = express()
+
+app.use(cors({
+  origin: '',
+  credentials: true
+}))
+app.use(morgan('dev'))
+app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api', authRouter)
 
-export default app;
+export default app

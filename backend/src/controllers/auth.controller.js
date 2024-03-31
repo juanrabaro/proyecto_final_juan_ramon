@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.model.js'
 import { createAccessToken } from '../jwt/jwt.js'
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body
@@ -87,6 +89,31 @@ export const profile = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
+}
+
+
+export const verifyToken = async (req, res) => {
+  
+  let tokenUser = null
+  const { token } = req.body
+
+  if (!token) return res.status(401).json({ message: 'No token, access denied' })
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    if (err) {
+      res.status(401).json({ message: 'Token is not valid' })
+    } else {
+      tokenUser = user
+    }
+  })
+
+  const userFound = await User.findOne({ id: tokenUser._id })
+  res.status(200).json({
+    id: userFound._id,
+    userName: userFound.username,
+    email: userFound.email
+  })
+
 }
 
 

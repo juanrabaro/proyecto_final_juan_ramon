@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.model.js'
-import { createAccessToken } from '../libs/jwt.js'
-import { TOKEN_SECRET } from '../config.js'
+import { createAccessToken } from '../jwt/jwt.js'
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body
@@ -67,15 +66,32 @@ export const profile = async (req, res) => {
 
   try {
     const userFound = await User.findOne({ email })
-    
     if (!userFound) return res.status(400).json({ message: 'The user not exist' })
-    if (userFound.password !== password) {
-      return res.status(400).json({ message: 'Invalid password' })
+    
+    const isMatch = await bcrypt.compare(password, userFound.password)
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect password' })
     }
 
-    res.status(200).json(userFound)
-    
+    const accessToken = await createAccessToken({ id: userFound._id })
+
+    res.cookie('token', accessToken)
+    res.status(200).json({
+      id: userFound._id,
+      userName: userFound.username,
+      email: userFound.email,
+      createdAt: userFound.createdAt,
+      updatedAt: userFound.updatedAt,
+    })
+
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
+}
+
+
+// Solo para pruebas en el servidor, desde el cliente borrar las cookies del navegador
+export const logout = async (req, res) => {
+  res.clearCookie('token')
+  res.status(200).json({ message: 'Logout' })
 }

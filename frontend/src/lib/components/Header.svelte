@@ -1,6 +1,7 @@
 <script>
   import Cookies from 'js-cookie';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { user, loginStore, logoutStore } from '$lib/stores/authStore.js'
   import { verifyToken } from '$lib/api/auth.js'
 
@@ -19,6 +20,12 @@
   user.subscribe((value) => {
     userHeader = value
   })
+
+  function logout() {
+    goto('/')
+    logoutStore()
+  }
+
 </script>
 
 <header>
@@ -28,7 +35,7 @@
       <li><a href="/">Home</a></li>
       {#if userHeader}
         <li><a href="/profile">Profile</a></li>
-        <li><button on:click={logoutStore}>Logout</button></li>
+        <li><button on:click={logout}>Logout</button></li>
       {:else}
         <li><a href="/login">Login</a></li>
         <li><a href="/register">Register</a></li>

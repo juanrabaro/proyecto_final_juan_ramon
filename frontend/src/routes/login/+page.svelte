@@ -18,10 +18,10 @@
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      loginStore(formData)
       const res = await login(formData);
       console.log(res)
-
+      
+      loginStore(formData)
       formData = {
         email: '',
         password: ''

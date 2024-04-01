@@ -40,7 +40,7 @@ export const login = async (req, res) => {
   try {
     const userFound = await User.findOne({ email })
     if (!userFound) return res.status(400).json({ message: 'The user not exist' })
-    
+
     const isMatch = await bcrypt.compare(password, userFound.password)
     if (!isMatch) {
       return res.status(400).json({ message: 'Incorrect password' })
@@ -69,7 +69,7 @@ export const profile = async (req, res) => {
   try {
     const userFound = await User.findOne({ email })
     if (!userFound) return res.status(400).json({ message: 'The user not exist' })
-    
+
     const isMatch = await bcrypt.compare(password, userFound.password)
     if (!isMatch) {
       return res.status(400).json({ message: 'Incorrect password' })
@@ -93,26 +93,31 @@ export const profile = async (req, res) => {
 
 
 export const verifyToken = async (req, res) => {
-  
+
   let tokenUser = null
   const { token } = req.body
 
-  if (!token) return res.status(401).json({ message: 'No token, access denied' })
+  try {
+    if (!token) return res.status(401).json({ message: 'No token, access denied' })
 
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-    if (err) {
-      res.status(401).json({ message: 'Token is not valid' })
-    } else {
-      tokenUser = user
-    }
-  })
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+      if (err) {
+        res.status(401).json({ message: 'Token is not valid' })
+      } else {
+        tokenUser = user
+      }
+    })
 
-  const userFound = await User.findOne({ id: tokenUser._id })
-  res.status(200).json({
-    id: userFound._id,
-    userName: userFound.username,
-    email: userFound.email
-  })
+    const userFound = await User.findOne({ _id: tokenUser.id })
+    console.log(userFound);
+    res.status(200).json({
+      id: userFound.id,
+      userName: userFound.username,
+      email: userFound.email
+    })
+  } catch (error) {
+    console.log(error);
+  }
 
 }
 

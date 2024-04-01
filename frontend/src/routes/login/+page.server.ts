@@ -11,10 +11,10 @@ export const load = async ({ request }: any) => {
 
     try {
       res = await verifyToken(tokenFormated);
-      console.log(res);
+      //console.log(res);
 
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
 
     if (res) {

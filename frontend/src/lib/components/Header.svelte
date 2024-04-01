@@ -1,39 +1,38 @@
 <script>
-  import Cookies from 'js-cookie';
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { user, loginStore, logoutStore } from '$lib/stores/authStore.js'
-  import { verifyToken } from '$lib/api/auth.js'
+  import Cookies from "js-cookie";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { user, loginStore, logoutStore } from "$lib/stores/authStore.js";
+  import { verifyToken } from "$lib/api/auth.js";
 
   onMount(async () => {
     try {
-      const token = Cookies.get('token')
-      const res = await verifyToken(token)
-      loginStore(res.data)
+      const token = Cookies.get("token");
+      const res = await verifyToken(token);
+      loginStore(res.data);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  })
+  });
 
-  let userHeader
+  let userHeader;
 
   user.subscribe((value) => {
-    userHeader = value
-  })
+    userHeader = value;
+  });
 
   function logout() {
-    goto('/')
-    logoutStore()
+    goto("/login");
+    logoutStore();
   }
-
 </script>
 
 <header>
   <h1>Task Master</h1>
   <nav>
     <ul>
-      <li><a href="/">Home</a></li>
       {#if userHeader}
+        <li><a href="/">Tasks</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       {:else}

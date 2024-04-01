@@ -21,13 +21,13 @@
       const res = await login(formData);
       console.log(res)
       
-      loginStore(formData)
+      await loginStore(formData)
       formData = {
         email: '',
         password: ''
       }
 
-      goto('/')
+      //goto('/')
     } catch (err) {
       console.error(err)
     }

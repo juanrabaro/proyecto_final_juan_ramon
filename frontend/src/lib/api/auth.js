@@ -1,9 +1,4 @@
-import axios from 'axios';
-
-const myAxios = axios.create({
-  baseURL: 'http://localhost:4000/api',
-  withCredentials: true,
-})
+import { myAxios } from "./myAxios.js"
 
 export const register = (user) => myAxios.post('/register', user)
 

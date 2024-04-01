@@ -22,7 +22,7 @@
       const res = await register(formData);
       console.log(res)
 
-      loginStore(formData)
+      await loginStore(formData)
       formData = {
         username: '',
         email: '',

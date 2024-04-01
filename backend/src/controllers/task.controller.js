@@ -2,7 +2,9 @@ import Task from '../models/task.model.js'
 
 export const getTasks = async (req, res) => {
 
-  const tasks = await Task.find();
+  const tasks = await Task.find({
+    user: req.user.id
+  }).populate('user', '_id');
 
   res.json(tasks);
 }
@@ -10,6 +12,10 @@ export const getTasks = async (req, res) => {
 export const getTask = async (req, res) => {
 
   const tasks = await Task.findById(req.params.id);
+
+  if (!tasks) {
+    return res.status(400).json({ message: 'Task not found' })
+  }
 
   res.json(tasks);
 }
@@ -21,7 +27,7 @@ export const addTask = async (req, res) => {
     return res.status(400).json({ message: "Title and description are required" });
   }
 
-  const newTask = new Task({ title, description });
+  const newTask = new Task({ title, description, user: req.user.id });
   const savedTask = await newTask.save();
 
   res.json(savedTask);

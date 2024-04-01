@@ -3,6 +3,8 @@
   import { loginStore } from '$lib/stores/authStore.js'
   import { register } from '$lib/api/auth.js'
 
+  export let data
+
   let formData = {
     username: '',
     email: '',

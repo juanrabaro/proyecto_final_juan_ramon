@@ -14,6 +14,14 @@ export const addTask = (task, token) => myAxios.post('/add-task', task, {
   }
 })
 
-export const updateTask = (task) => myAxios.put(`/update-task/${task._id}`, task)
+export const updateTask = (task, token) => myAxios.put(`/update-task/${task._id}`, task, {
+  headers: {
+    Authorization: token
+  }
+})
 
-export const deleteTask = (id) => myAxios.put(`/delete-task/${id}`)
+export const deleteTask = (id, token) => myAxios.delete(`/delete-task/${id}`, {
+  headers: {
+    Authorization: token
+  }
+})

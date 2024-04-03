@@ -16,7 +16,8 @@ export const load = async ({ request }: any) => {
       console.log(resTasks);
 
       return {
-        tasks: resTasks.data
+        tasks: resTasks.data,
+        token: tokenFormated
       }
     } catch (error) {
       console.error(error);

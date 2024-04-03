@@ -1,4 +1,5 @@
 <script>
+  import { goto } from '$app/navigation';
   import { deleteTask, updateTask } from "$lib/api/task.js";
 
   export let data;
@@ -16,20 +17,13 @@
         return task._id !== taskId;
       });
       
-
     } catch (error) {
       console.error(error);
     }
   }
 
-  function handleUpdate() {
-    const taskId = e.target.id;
-
-    const taskFound = data.tasks.filter((task) => {
-      return task._id === taskId;
-    });
-
-    console.log(taskFound[0]);
+  async function handleUpdate(e) {
+    goto(`/update-task/${e.target.id}`);
   }
 </script>
 
@@ -43,7 +37,7 @@
         <li>{task.title}</li>
         <li>{task.description}</li>
         <button id={task._id} on:click={handleDelete}>Delete Task</button>
-        <button on:click={handleUpdate}>Update Task</button>
+        <button id={task._id} on:click={handleUpdate}>Update Task</button>
       </ul>
     {/each}
   {/if}

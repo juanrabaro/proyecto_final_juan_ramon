@@ -16,7 +16,7 @@
     }
   }
 
-  async function handleLogin(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     try {
 
@@ -45,7 +45,7 @@
     <label for="description">Description</label>
     <input type="description" id="description" name="description" required on:input={handleInput} bind:value={formData.description} />
     
-    <button on:click={handleLogin}>Login</button>
+    <button on:click={handleSubmit}>Login</button>
   </form>
 </main>
 

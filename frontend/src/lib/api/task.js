@@ -6,7 +6,11 @@ export const getTasks = (token) => myAxios.get('/tasks', {
   }
 })
 
-export const getTask = (id) => myAxios.get(`/task/${id}`)
+export const getTaskById = (id, token) => myAxios.get(`/task/${id}`, {
+  headers: {
+    Authorization: token
+  }
+})
 
 export const addTask = (task, token) => myAxios.post('/add-task', task, {
   headers: {

@@ -1,11 +1,12 @@
 <script>
   import { goto } from '$app/navigation';
-  import { loginStore } from '$lib/stores/authStore.js'
-  import { login } from '$lib/api/auth.js'
+  import { addTask } from '$lib/api/task.js'
+
+  export let data
 
   let formData = {
-    email: '',
-    password: ''
+    title: '',
+    description: ''
   }
 
   function handleInput(e) {
@@ -18,13 +19,13 @@
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      const res = await login(formData);
-      console.log(res)
-      
-      loginStore(formData)
+
+      const res = await addTask(formData, data.token)
+      console.log(res);
+
       formData = {
-        email: '',
-        password: ''
+        title: '',
+        description: ''
       }
 
       goto('/')
@@ -35,14 +36,14 @@
 </script>
 
 <main>
-  <h1>LOGIN</h1>
-  
+  <h1>Add task</h1>
+
   <form>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required on:input={handleInput} bind:value={formData.email} />
+    <label for="title">Title</label>
+    <input type="title" id="title" name="title" required on:input={handleInput} bind:value={formData.title} />
     
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required on:input={handleInput} bind:value={formData.password} />
+    <label for="description">Description</label>
+    <input type="description" id="description" name="description" required on:input={handleInput} bind:value={formData.description} />
     
     <button on:click={handleLogin}>Login</button>
   </form>
@@ -53,7 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
+    padding-top: 5%;
 
     h1 {
       padding-bottom: 20px;
@@ -63,6 +64,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 5px;
 
       input {
         padding: 5px;

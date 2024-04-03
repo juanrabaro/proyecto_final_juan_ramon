@@ -8,7 +8,11 @@ export const getTasks = (token) => myAxios.get('/tasks', {
 
 export const getTask = (id) => myAxios.get(`/task/${id}`)
 
-export const addTask = (task) => myAxios.post('/add-task', task)
+export const addTask = (task, token) => myAxios.post('/add-task', task, {
+  headers: {
+    Authorization: token
+  }
+})
 
 export const updateTask = (task) => myAxios.put(`/update-task/${task._id}`, task)
 

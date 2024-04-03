@@ -22,8 +22,8 @@
   });
 
   function logout() {
-    goto("/login");
     logoutStore();
+    goto("/login");
   }
 </script>
 
@@ -33,6 +33,7 @@
     <ul>
       {#if userHeader}
         <li><a href="/">Tasks</a></li>
+        <li><a href="/add-task">Add Task</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       {:else}

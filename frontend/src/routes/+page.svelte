@@ -1,5 +1,5 @@
 <script>
-  import { goto } from '$app/navigation';
+  import { goto } from "$app/navigation";
   import { deleteTask, updateTask } from "$lib/api/task.js";
 
   export let data;
@@ -16,7 +16,6 @@
       tasks = tasks.filter((task) => {
         return task._id !== taskId;
       });
-      
     } catch (error) {
       console.error(error);
     }
@@ -24,6 +23,29 @@
 
   async function handleUpdate(e) {
     goto(`/update-task/${e.target.id}`);
+  }
+
+  async function handleDone(e) {
+    
+    const taskFound = tasks.find((task) => {
+      return task._id === e.target.id;
+    });
+    taskFound.done = !taskFound.done;
+
+    tasks = tasks.map((task) => {
+      if (task._id === taskFound._id) {
+        return { ...task, done: taskFound.done };
+      }
+      return task;
+    });
+
+    try {
+      const res = await updateTask(taskFound, data.token);
+      console.log(res);
+      goto("/");
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
 
@@ -34,8 +56,14 @@
   {:else}
     {#each tasks as task}
       <ul>
-        <li>{task.title}</li>
-        <li>{task.description}</li>
+        <li class:done={task.done}>{task.title}</li>
+        <li class:done={task.done}>{task.description}</li>
+        <input
+          id={task._id}
+          on:click={handleDone}
+          type="checkbox"
+          checked={task.done}
+        />
         <button id={task._id} on:click={handleDelete}>Delete Task</button>
         <button id={task._id} on:click={handleUpdate}>Update Task</button>
       </ul>
@@ -57,6 +85,10 @@
       width: 20%;
       text-align: center;
       list-style: none;
+
+      .done {
+        text-decoration: line-through;
+      }
 
       button {
         background-color: rgb(77, 18, 18);

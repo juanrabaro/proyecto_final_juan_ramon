@@ -8,7 +8,7 @@
   onMount(async () => {
     try {
       const token = Cookies.get("token");
-      const res = await verifyToken(token);
+      const res = await verifyToken({token});
       loginStore(res.data);
     } catch (err) {
       console.error(err);

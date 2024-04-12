@@ -6,4 +6,4 @@ export const login = (user) => myAxios.post('/login', user)
 
 export const profile = (user) => myAxios.post('/profile', user)
 
-export const verifyToken = (token) => myAxios.post('/verify-token', { token })
+export const verifyToken = (token) => myAxios.post('/verify-token', token)

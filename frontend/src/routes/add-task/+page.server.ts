@@ -1,24 +1,22 @@
 import { redirect } from '@sveltejs/kit';
 import { verifyToken } from '$lib/api/auth.js';
 import { getTasks } from '$lib/api/task.js';
+import { extractToken } from '$lib/api/extractToken';
 
 export const load = async ({ request }: any) => {
   const token = request.headers.get('cookie')
-
+  
   if (token) {
     try {
+      
+      const tokenFormated = extractToken(token);
 
-      const tokenFormated = token.replace('token=', '');
-
-      await verifyToken(tokenFormated);
-
-      const resTasks = await getTasks(tokenFormated);
-      console.log(resTasks);
+      const res = await verifyToken({token: tokenFormated});
+      //console.log(res);
 
       return {
         token: tokenFormated
       }
-
     } catch (error) {
       console.error(error);
       return redirect(302, "/login");

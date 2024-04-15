@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 
 import authRouter from './routes/auth.routes.js'
 import taskRouter from './routes/task.routes.js'
+import cronoTaskRouter from './routes/cronoTask.routes.js'
 
 
 const app = express()
@@ -19,5 +20,6 @@ app.use(cookieParser())
 
 app.use('/api', authRouter)
 app.use('/api', taskRouter)
+app.use('/api', cronoTaskRouter)
 
 export default app

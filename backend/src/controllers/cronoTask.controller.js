@@ -45,7 +45,17 @@ export const addCronoTask = async (req, res) => {
 
 export const updateCronoTask = async (req, res) => {
   if (req.body.title) {
-    return res.status(200).json({ title: req.body.title })
+    const updatedTask = await CronoTask.findByIdAndUpdate(
+      req.params.id,
+      { title: req.body.title },
+      { new: true });
+
+    if (!updatedTask) {
+      return res.status(400).json({ message: 'Task not found' })
+    }
+    
+    res.json(updatedTask);
+
   } else {
     return res.status(200).json({ message: 'Not updating the title' })
   }

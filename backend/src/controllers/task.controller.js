@@ -11,11 +11,23 @@ export const getTasks = async (req, res) => {
 
 export const getTask = async (req, res) => {
 
+  if (req.params.id.length !== 24) {
+    return res.status(400).json({ message: 'Invalid id' })
+  }
+
+  const doesExist = await Task.exists({ _id: req.params.id });
+
+  if (!doesExist) {
+    return res.status(400).json({ message: 'Task not found' })
+  }
+
   const tasks = await Task.findById(req.params.id);
 
   if (!tasks) {
     return res.status(400).json({ message: 'Task not found' })
   }
+
+
 
   res.json(tasks);
 }

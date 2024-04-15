@@ -24,6 +24,7 @@
       task = res.data;
     } catch (error) {
       console.log(error);
+      goto("/");
     }
   });
 

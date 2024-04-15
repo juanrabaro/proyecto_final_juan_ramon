@@ -5,13 +5,26 @@ const cronoTaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  running: {
+  /* running: {
     type: Boolean,
     default: false,
+  }, */
+  running: {
+    type: String,
+    enum: ['stopped', 'running', 'paused'],
+    default: 'stopped',
   },
   timeStarted: {
     type: Date,
     default: null,
+  },
+  stoppedMoment: {
+    type: Date,
+    default: null,
+  },
+  stoppedTime: {
+    type: Number,
+    default: 0,
   },
   totalTime: {
     type: Number,

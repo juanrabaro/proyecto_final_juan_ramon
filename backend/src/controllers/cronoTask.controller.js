@@ -1,5 +1,17 @@
 import CronoTask from '../models/cronoTask.model.js'
 
+async function validateId(req, res) {
+  if (req.params.id.length !== 24) {
+    throw new Error('Invalid id');
+  }
+
+  const doesExist = await TimerTask.exists({ _id: req.params.id });
+
+  if (!doesExist) {
+    throw new Error('Task not found');
+  }
+}
+
 export const getCronoTasks = async (req, res) => {
 
   const tasks = await CronoTask.find({
@@ -11,14 +23,10 @@ export const getCronoTasks = async (req, res) => {
 
 export const getCronoTask = async (req, res) => {
 
-  if (req.params.id.length !== 24) {
-    return res.status(400).json({ message: 'Invalid id' })
-  }
-
-  const doesExist = await CronoTask.exists({ _id: req.params.id });
-
-  if (!doesExist) {
-    return res.status(400).json({ message: 'Task not found' })
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 
   const tasks = await CronoTask.findById(req.params.id);
@@ -138,6 +146,13 @@ async function stopCrono(req, res) {
   }
 }
 export const updateCronoTask = async (req, res) => {
+
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
   // If the title is being updated, only update the title
   if (req.body.title) {
     updateTitle(req, res);
@@ -157,6 +172,12 @@ export const updateCronoTask = async (req, res) => {
 }
 
 export const deleteCronoTask = async (req, res) => {
+
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
 
   const deletedTask = await CronoTask.findByIdAndDelete(req.params.id);
 

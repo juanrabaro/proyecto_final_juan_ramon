@@ -1,5 +1,17 @@
 import Task from '../models/task.model.js'
 
+async function validateId(req, res) {
+  if (req.params.id.length !== 24) {
+    throw new Error('Invalid id');
+  }
+
+  const doesExist = await TimerTask.exists({ _id: req.params.id });
+
+  if (!doesExist) {
+    throw new Error('Task not found');
+  }
+}
+
 export const getTasks = async (req, res) => {
 
   const tasks = await Task.find({
@@ -11,14 +23,10 @@ export const getTasks = async (req, res) => {
 
 export const getTask = async (req, res) => {
 
-  if (req.params.id.length !== 24) {
-    return res.status(400).json({ message: 'Invalid id' })
-  }
-
-  const doesExist = await Task.exists({ _id: req.params.id });
-
-  if (!doesExist) {
-    return res.status(400).json({ message: 'Task not found' })
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 
   const tasks = await Task.findById(req.params.id);
@@ -44,6 +52,13 @@ export const addTask = async (req, res) => {
 }
 
 export const updateTask = async (req, res) => {
+
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
   const { title, description } = req.body;
 
   if (!title || !description) {
@@ -63,6 +78,12 @@ export const updateTask = async (req, res) => {
 }
 
 export const deleteTask = async (req, res) => {
+
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
 
   const deletedTask = await Task.findByIdAndDelete(req.params.id);
 

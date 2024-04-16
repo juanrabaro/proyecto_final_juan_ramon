@@ -1,5 +1,17 @@
 import TimerTask from '../models/timerTask.model.js'
 
+async function validateId(req, res) {
+  if (req.params.id.length !== 24) {
+    throw new Error('Invalid id');
+  }
+
+  const doesExist = await TimerTask.exists({ _id: req.params.id });
+
+  if (!doesExist) {
+    throw new Error('Task not found');
+  }
+}
+
 export const getTimerTasks = async (req, res) => {
 
   const tasks = await TimerTask.find({
@@ -11,14 +23,10 @@ export const getTimerTasks = async (req, res) => {
 
 export const getTimerTask = async (req, res) => {
 
-  if (req.params.id.length !== 24) {
-    return res.status(400).json({ message: 'Invalid id' })
-  }
-
-  const doesExist = await TimerTask.exists({ _id: req.params.id });
-
-  if (!doesExist) {
-    return res.status(400).json({ message: 'Task not found' })
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 
   const tasks = await TimerTask.findById(req.params.id);
@@ -138,6 +146,13 @@ async function stopTimer(req, res) {
   }
 }
 export const updateTimerTask = async (req, res) => {
+  
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
   // If the title is being updated, only update the title
   if (req.body.title) {
     updateTitle(req, res);
@@ -157,6 +172,12 @@ export const updateTimerTask = async (req, res) => {
 }
 
 export const deleteTimerTask = async (req, res) => {
+
+  try {
+    await validateId(req, res)
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
 
   const deletedTask = await TimerTask.findByIdAndDelete(req.params.id);
 

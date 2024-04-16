@@ -28,7 +28,7 @@ const timerTaskSchema = new mongoose.Schema({
   },
   maxTime: {
     type: Number,
-    default: 30,
+    default: 1800,
   },
   remainingTime: {
     type: Number,

@@ -89,6 +89,7 @@ async function startTimer(req, res) {
         running: "running",
         stoppedMoment: null,
         stoppedTime: oldTask.stoppedTime + ((Date.now() / 1000) - oldTask.stoppedMoment),
+        //remainingTime: oldTask.maxTime - (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
       },
       { new: true });
 
@@ -106,6 +107,7 @@ async function pauseTimer(req, res) {
     {
       running: "paused",
       stoppedMoment: Date.now() / 1000,
+      remainingTime: oldTask.maxTime - (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
     },
     { new: true });
 
@@ -117,36 +119,23 @@ async function stopTimer(req, res) {
     return res.status(400).json({ message: 'Task not found' })
   }
 
-  if (oldTask.running === "paused") {
-    const updatedTask = await TimerTask.findByIdAndUpdate(
-      req.params.id,
-      {
-        running: "stopped",
-        timeStarted: null,
-        stoppedMoment: null,
-        stoppedTime: 0,
-        totalTime: oldTask.totalTime + (((Date.now() / 1000) - oldTask.timeStarted) - (oldTask.stoppedTime + ((Date.now() / 1000) - oldTask.stoppedMoment))),
-      },
-      { new: true });
-  
-    res.json(updatedTask);
-  } else if (oldTask.running === "running") {
-    const updatedTask = await TimerTask.findByIdAndUpdate(
-      req.params.id,
-      {
-        running: "stopped",
-        timeStarted: null,
-        stoppedMoment: null,
-        stoppedTime: 0,
-        totalTime: oldTask.totalTime + (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
-      },
-      { new: true });
-  
-    res.json(updatedTask);
-  }
+  const updatedTask = await TimerTask.findByIdAndUpdate(
+    req.params.id,
+    {
+      running: "stopped",
+      timeStarted: null,
+      stoppedMoment: null,
+      stoppedTime: 0,
+      maxTime: oldTask.maxTime,
+      remainingTime: oldTask.maxTime,
+      totalTime: oldTask.totalTime + ((Date.now() / 1000 - oldTask.timeStarted) - (oldTask.stoppedTime + (Date.now() / 1000 - oldTask.stoppedMoment))),
+    },
+    { new: true });
+
+  res.json(updatedTask);
 }
 export const updateTimerTask = async (req, res) => {
-  
+
   try {
     await validateId(req, res)
   } catch (error) {

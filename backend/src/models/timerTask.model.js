@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const cronoTaskSchema = new mongoose.Schema({
+const timerTaskSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -26,6 +26,16 @@ const cronoTaskSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  maxTime: {
+    type: Number,
+    default: 30,
+  },
+  remainingTime: {
+    type: Number,
+    default: function () {
+      return this.maxTime;
+    },
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -35,4 +45,4 @@ const cronoTaskSchema = new mongoose.Schema({
   { timestamps: true }
 )
 
-export default mongoose.model('CronoTask', cronoTaskSchema)
+export default mongoose.model('TimerTask', timerTaskSchema)

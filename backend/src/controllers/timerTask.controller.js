@@ -63,6 +63,9 @@ async function updateTitle(req, res) {
 
   res.json(updatedTask);
 }
+const horaActual = () => {
+  return Date.now() / 1000;
+}
 async function startTimer(req, res) {
   const oldTask = await TimerTask.findById(req.params.id);
   if (!oldTask) {
@@ -75,7 +78,7 @@ async function startTimer(req, res) {
       req.params.id,
       {
         running: "running",
-        timeStarted: Date.now() / 1000,
+        timeStarted: horaActual(),
       },
       { new: true });
 
@@ -88,8 +91,7 @@ async function startTimer(req, res) {
       {
         running: "running",
         stoppedMoment: null,
-        stoppedTime: oldTask.stoppedTime + ((Date.now() / 1000) - oldTask.stoppedMoment),
-        //remainingTime: oldTask.maxTime - (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
+        stoppedTime: oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment),
       },
       { new: true });
 
@@ -106,8 +108,8 @@ async function pauseTimer(req, res) {
     req.params.id,
     {
       running: "paused",
-      stoppedMoment: Date.now() / 1000,
-      remainingTime: oldTask.maxTime - (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
+      stoppedMoment: horaActual(),
+      remainingTime: oldTask.maxTime - ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
     },
     { new: true });
 
@@ -119,20 +121,37 @@ async function stopTimer(req, res) {
     return res.status(400).json({ message: 'Task not found' })
   }
 
-  const updatedTask = await TimerTask.findByIdAndUpdate(
-    req.params.id,
-    {
-      running: "stopped",
-      timeStarted: null,
-      stoppedMoment: null,
-      stoppedTime: 0,
-      maxTime: oldTask.maxTime,
-      remainingTime: oldTask.maxTime,
-      totalTime: oldTask.totalTime + ((Date.now() / 1000 - oldTask.timeStarted) - (oldTask.stoppedTime + (Date.now() / 1000 - oldTask.stoppedMoment))),
-    },
-    { new: true });
-
-  res.json(updatedTask);
+  if (oldTask.running === "running") {
+    const updatedTask = await TimerTask.findByIdAndUpdate(
+      req.params.id,
+      {
+        running: "stopped",
+        timeStarted: null,
+        stoppedMoment: null,
+        stoppedTime: 0,
+        maxTime: oldTask.maxTime,
+        remainingTime: oldTask.maxTime,
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
+      },
+      { new: true });
+  
+    res.json(updatedTask);
+  } else {
+    const updatedTask = await TimerTask.findByIdAndUpdate(
+      req.params.id,
+      {
+        running: "stopped",
+        timeStarted: null,
+        stoppedMoment: null,
+        stoppedTime: 0,
+        maxTime: oldTask.maxTime,
+        remainingTime: oldTask.maxTime,
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))),
+      },
+      { new: true });
+  
+    res.json(updatedTask);
+  }
 }
 export const updateTimerTask = async (req, res) => {
 

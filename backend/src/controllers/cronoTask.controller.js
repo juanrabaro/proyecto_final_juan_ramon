@@ -63,6 +63,9 @@ async function updateTitle(req, res) {
 
   res.json(updatedTask);
 }
+const horaActual = () => {
+  return Date.now() / 1000;
+}
 async function startCrono(req, res) {
   const oldTask = await CronoTask.findById(req.params.id);
   if (!oldTask) {
@@ -75,7 +78,7 @@ async function startCrono(req, res) {
       req.params.id,
       {
         running: "running",
-        timeStarted: Date.now() / 1000,
+        timeStarted: horaActual(),
       },
       { new: true });
 
@@ -88,7 +91,7 @@ async function startCrono(req, res) {
       {
         running: "running",
         stoppedMoment: null,
-        stoppedTime: oldTask.stoppedTime + ((Date.now() / 1000) - oldTask.stoppedMoment),
+        stoppedTime: oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment),
       },
       { new: true });
 
@@ -105,7 +108,7 @@ async function pauseCrono(req, res) {
     req.params.id,
     {
       running: "paused",
-      stoppedMoment: Date.now() / 1000,
+      stoppedMoment: horaActual(),
     },
     { new: true });
 
@@ -125,7 +128,7 @@ async function stopCrono(req, res) {
         timeStarted: null,
         stoppedMoment: null,
         stoppedTime: 0,
-        totalTime: oldTask.totalTime + (((Date.now() / 1000) - oldTask.timeStarted) - (oldTask.stoppedTime + ((Date.now() / 1000) - oldTask.stoppedMoment))),
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))),
       },
       { new: true });
   
@@ -138,7 +141,7 @@ async function stopCrono(req, res) {
         timeStarted: null,
         stoppedMoment: null,
         stoppedTime: 0,
-        totalTime: oldTask.totalTime + (((Date.now() / 1000) - oldTask.timeStarted) - oldTask.stoppedTime),
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
       },
       { new: true });
   

@@ -17,11 +17,10 @@
   let cronoTasks = data.cronoTasks;
   let taskTypeSelected = "crono";
   let titleTimeTask = "";
-  let maxTimeTimerTask = 0;
+  let maxTimeTimerTask = 30;
 
   async function createTimeTask() {
     if (!titleTimeTask.length) return;
-    if (taskTypeSelected === "timer" && !maxTimeTimerTask) return;
 
     if (taskTypeSelected === "crono") {
       try {
@@ -66,7 +65,7 @@
       } catch (error) {
         console.error(error);
       }
-    } 
+    }
     // It's a crono task
     else {
       console.log("crono");
@@ -96,35 +95,34 @@
       <input bind:value={maxTimeTimerTask} type="text" placeholder="MaxTime" />
     {/if}
     <button on:click={createTimeTask}>Add Time Task</button>
-
-    // Filtrador
   </section>
-  <section>
+  <section class="task-container">
     {#if !timerTasks.length && !cronoTasks.length}
       <p>No time tasks</p>
     {:else}
-      {#each timerTasks as timerTask}
-        <ul>
-          <li>{timerTask.title}</li>
-          <li>{timerTask.maxTime}</li>
-          <button id={timerTask._id} on:click={handleDeleteTimeTask}>Delete timerTask</button
+    <section class="timer-task-container">
+        <h2>Timer tasks</h2>
+        {#each timerTasks as timerTask}
+          <ul>
+            <li>{timerTask.title}</li>
+            <li>{timerTask.maxTime}</li>
+            <button id={timerTask._id} on:click={handleDeleteTimeTask}
+              >Delete timerTask</button
             >
-            <!-- 
-              <button id={timerTask._id} on:click={handleUpdate}
-              >Update timerTask</button
-              > -->
-        </ul>
+          </ul>
         {/each}
+      </section>
+      <section class="crono-task-container">
+        <h2>Crono tasks</h2>
         {#each cronoTasks as cronoTask}
-        <ul>
-          <li>{cronoTask.title}</li>
-          <button id={cronoTask._id} on:click={handleDeleteTimeTask}>Delete cronoTask</button>
-            <!--
-            <button id={cronoTask._id} on:click={handleUpdate}
-            >Update cronoTask</button
-          > -->
-        </ul>
-      {/each}
+          <ul>
+            <li>{cronoTask.title}</li>
+            <button id={cronoTask._id} on:click={handleDeleteTimeTask}
+              >Delete cronoTask</button
+            >
+          </ul>
+        {/each}
+      </section>
     {/if}
   </section>
 </main>
@@ -151,24 +149,29 @@
       border: 1px solid #df7171;
     }
 
-    ul {
-      background-color: rgb(20, 20, 20);
-      padding: 10px;
-      width: 100%;
-      text-align: center;
-      list-style: none;
-
-      button {
-        background-color: rgb(77, 18, 18);
-        color: rgb(217, 217, 217);
-        border: none;
-        padding: 5px;
-        margin-top: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-      button:hover {
-        background-color: rgb(122, 28, 28);
+    .task-container {
+      display: flex;
+      gap: 20px;
+      
+      ul {
+        background-color: rgb(20, 20, 20);
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+        list-style: none;
+  
+        button {
+          background-color: rgb(77, 18, 18);
+          color: rgb(217, 217, 217);
+          border: none;
+          padding: 5px;
+          margin-top: 10px;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+        button:hover {
+          background-color: rgb(122, 28, 28);
+        }
       }
     }
   }

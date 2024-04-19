@@ -25,20 +25,19 @@
 
     if (taskTypeSelected === "crono") {
       try {
-        const res = await addTimerTask({ title: titleTimeTask });
+        const res = await addCronoTask({ title: titleTimeTask });
         console.log(res);
-        //timerTasks = [...timerTasks, res];
+        cronoTasks = [...cronoTasks, res.data];
+        titleTimeTask = "";
       } catch (error) {
         console.error(error);
       }
     } else if (taskTypeSelected === "timer") {
       try {
-        const res = await addCronoTask({
-          title: titleTimeTask,
-          maxTime: maxTimeTimerTask,
-        });
+        const res = await addTimerTask({ title: titleTimeTask, maxTime: maxTimeTimerTask });
         console.log(res);
-        //timerTasks = [...timerTasks, res];
+        timerTasks = [...timerTasks, res.data];
+        titleTimeTask = "";
       } catch (error) {
         console.error(error);
       }
@@ -54,13 +53,13 @@
       <option value="timer">Timer</option>
     </select>
     <input
-      on:input={(e) => (titleTimeTask = e.target.value)}
+      bind:value={titleTimeTask}
       type="text"
       placeholder="Title"
     />
     {#if taskTypeSelected === "timer"}
       <input
-        on:input={(e) => (maxTimeTimerTask = parseInt(e.target.value))}
+        bind:value={maxTimeTimerTask}
         type="text"
         placeholder="MaxTime"
       />
@@ -72,8 +71,9 @@
       <p>No time tasks</p>
     {:else}
       {#each timerTasks as timerTask}
-        <ul>
-          <li>{timerTask.title}</li>
+      <ul>
+        <li>{timerTask.title}</li>
+        <li>{timerTask.maxTime}</li>
           <!-- <button id={timerTask._id} on:click={handleDelete}
             >Delete timerTask</button
             >
@@ -85,7 +85,6 @@
       {#each cronoTasks as cronoTask}
         <ul>
           <li>{cronoTask.title}</li>
-          <li>{cronoTask.maxTime}</li>
           <!-- <button id={cronoTask._id} on:click={handleDelete}
             >Delete cronoTask</button
           >

@@ -34,10 +34,49 @@
       }
     } else if (taskTypeSelected === "timer") {
       try {
-        const res = await addTimerTask({ title: titleTimeTask, maxTime: maxTimeTimerTask });
+        const res = await addTimerTask({
+          title: titleTimeTask,
+          maxTime: maxTimeTimerTask,
+        });
         console.log(res);
         timerTasks = [...timerTasks, res.data];
         titleTimeTask = "";
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
+  async function handleDeleteTimeTask(e) {
+    const taskId = e.target.id;
+
+    const taskFound = timerTasks.find((task) => {
+      return task._id === taskId;
+    });
+
+    // It's a timer task
+    if (taskFound) {
+      console.log("timer");
+      try {
+        const res = await deleteTimerTask(taskId);
+        console.log(res);
+        timerTasks = timerTasks.filter((task) => {
+          return task._id !== taskId;
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } 
+    // It's a crono task
+    else {
+      console.log("crono");
+      console.log(taskId);
+      try {
+        const res = await deleteCronoTask(taskId);
+        console.log(res);
+        cronoTasks = cronoTasks.filter((task) => {
+          return task._id !== taskId;
+        });
       } catch (error) {
         console.error(error);
       }
@@ -52,43 +91,36 @@
       <option value="crono" default>Crono</option>
       <option value="timer">Timer</option>
     </select>
-    <input
-      bind:value={titleTimeTask}
-      type="text"
-      placeholder="Title"
-    />
+    <input bind:value={titleTimeTask} type="text" placeholder="Title" />
     {#if taskTypeSelected === "timer"}
-      <input
-        bind:value={maxTimeTimerTask}
-        type="text"
-        placeholder="MaxTime"
-      />
+      <input bind:value={maxTimeTimerTask} type="text" placeholder="MaxTime" />
     {/if}
     <button on:click={createTimeTask}>Add Time Task</button>
+
+    // Filtrador
   </section>
   <section>
     {#if !timerTasks.length && !cronoTasks.length}
       <p>No time tasks</p>
     {:else}
       {#each timerTasks as timerTask}
-      <ul>
-        <li>{timerTask.title}</li>
-        <li>{timerTask.maxTime}</li>
-          <!-- <button id={timerTask._id} on:click={handleDelete}
-            >Delete timerTask</button
+        <ul>
+          <li>{timerTask.title}</li>
+          <li>{timerTask.maxTime}</li>
+          <button id={timerTask._id} on:click={handleDeleteTimeTask}>Delete timerTask</button
             >
-            <button id={timerTask._id} on:click={handleUpdate}
-            >Update timerTask</button
-            > -->
+            <!-- 
+              <button id={timerTask._id} on:click={handleUpdate}
+              >Update timerTask</button
+              > -->
         </ul>
-      {/each}
-      {#each cronoTasks as cronoTask}
+        {/each}
+        {#each cronoTasks as cronoTask}
         <ul>
           <li>{cronoTask.title}</li>
-          <!-- <button id={cronoTask._id} on:click={handleDelete}
-            >Delete cronoTask</button
-          >
-          <button id={cronoTask._id} on:click={handleUpdate}
+          <button id={cronoTask._id} on:click={handleDeleteTimeTask}>Delete cronoTask</button>
+            <!--
+            <button id={cronoTask._id} on:click={handleUpdate}
             >Update cronoTask</button
           > -->
         </ul>

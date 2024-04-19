@@ -5,7 +5,7 @@ async function validateId(req, res) {
     throw new Error('Invalid id');
   }
 
-  const doesExist = await TimerTask.exists({ _id: req.params.id });
+  const doesExist = await CronoTask.exists({ _id: req.params.id });
 
   if (!doesExist) {
     throw new Error('Task not found');

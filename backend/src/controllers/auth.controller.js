@@ -67,8 +67,8 @@ export const verifyToken = async (req, res) => {
 
   let tokenUser = null
   const { token } = req.body
-  console.log("REQ.BODY", req.body);
-  console.log("REQ.BODY.TOKEN", req.body.token);
+  /* console.log("REQ.BODY", req.body);
+  console.log("REQ.BODY.TOKEN", req.body.token); */
 
   try {
     if (!token) return res.status(401).json({ message: 'No token, access denied' })
@@ -82,7 +82,7 @@ export const verifyToken = async (req, res) => {
     })
 
     const userFound = await User.findOne({ _id: tokenUser.id })
-    console.log("USERFOUND", userFound);
+    // console.log("USERFOUND", userFound);
     res.status(200).json({
       id: userFound._id,
       userName: userFound.username,

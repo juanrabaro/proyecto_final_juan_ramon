@@ -8,7 +8,7 @@
 
   async function handleDelete(e) {
     const taskId = e.target.id;
-  
+
     try {
       const res = await deleteTask(taskId, data.token);
       console.log(res);
@@ -26,7 +26,6 @@
   }
 
   async function handleDone(e) {
-    
     const taskFound = tasks.find((task) => {
       return task._id === e.target.id;
     });
@@ -51,6 +50,7 @@
 
 <main>
   <h1>TASKS</h1>
+  <button on:click={() => goto("/add-task")}>Add Task</button>
   {#if !tasks.length}
     <p>No tasks</p>
   {:else}
@@ -78,6 +78,20 @@
     align-items: center;
     gap: 20px;
     padding-top: 50px;
+
+    button {
+      background-color: #ba3333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px 5px 10px;
+      font-size: 1.1em;
+    }
+    button:hover {
+      cursor: pointer;
+      background-color: #740808;
+      border: 1px solid #df7171;
+    }
 
     ul {
       background-color: rgb(20, 20, 20);

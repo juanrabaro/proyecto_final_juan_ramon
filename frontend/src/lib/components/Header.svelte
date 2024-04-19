@@ -33,7 +33,7 @@
     <ul>
       {#if userHeader}
         <li><a href="/">Tasks</a></li>
-        <li><a href="/add-task">Add Task</a></li>
+        <li><a href="/time-tasks">TimeTasks</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       {:else}

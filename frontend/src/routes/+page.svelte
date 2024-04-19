@@ -8,7 +8,7 @@
 
   async function handleDelete(e) {
     const taskId = e.target.id;
-
+  
     try {
       const res = await deleteTask(taskId, data.token);
       console.log(res);

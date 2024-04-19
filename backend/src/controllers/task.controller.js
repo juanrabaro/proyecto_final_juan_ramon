@@ -5,7 +5,7 @@ async function validateId(req, res) {
     throw new Error('Invalid id');
   }
 
-  const doesExist = await TimerTask.exists({ _id: req.params.id });
+  const doesExist = await Task.exists({ _id: req.params.id });
 
   if (!doesExist) {
     throw new Error('Task not found');
@@ -78,13 +78,13 @@ export const updateTask = async (req, res) => {
 }
 
 export const deleteTask = async (req, res) => {
-
   try {
     await validateId(req, res)
+    
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-
+  
   const deletedTask = await Task.findByIdAndDelete(req.params.id);
 
   if (!deletedTask) {

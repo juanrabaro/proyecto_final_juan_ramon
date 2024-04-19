@@ -40,6 +40,7 @@
         console.log(res);
         timerTasks = [...timerTasks, res.data];
         titleTimeTask = "";
+        maxTimeTimerTask = 30;
       } catch (error) {
         console.error(error);
       }

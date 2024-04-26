@@ -16,7 +16,8 @@ export const load = async ({ request }: any) => {
       res = await verifyToken({token: tokenFormated});
       //console.log(res);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
+      console.log("Error con el token o no encontrado en el login");
     }
 
     if (res) {

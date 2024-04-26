@@ -11,7 +11,8 @@
       const res = await verifyToken({token});
       loginStore(res.data);
     } catch (err) {
-      console.error(err);
+      //console.error(err);
+      console.log("Error con el token o no encontrado en el header");
     }
   });
 

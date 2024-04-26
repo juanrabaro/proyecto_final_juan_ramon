@@ -21,7 +21,8 @@ export const load = async ({ request }: any) => {
         token: tokenFormated
       }
     } catch (error) {
-      console.error(error);
+      //console.log(error);
+      console.log("Error con el token o no encontrado en el tasks(/)");
       return redirect(302, "/login");
     }
   } else {

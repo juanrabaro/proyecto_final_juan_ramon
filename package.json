@@ -8,7 +8,7 @@
     "frontend"
   ],
   "scripts": {
-    "dual": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "dual": "concurrently \"docker-compose up\" \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

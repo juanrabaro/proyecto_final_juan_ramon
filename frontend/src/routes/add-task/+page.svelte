@@ -45,7 +45,7 @@
     <label for="description">Description</label>
     <input type="description" id="description" name="description" required on:input={handleInput} bind:value={formData.description} />
     
-    <button on:click={handleSubmit}>Login</button>
+    <button on:click={handleSubmit}>Add Task</button>
   </form>
 </main>
 

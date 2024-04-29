@@ -1,5 +1,4 @@
 <script>
-  import { goto } from "$app/navigation";
   import {
     deleteTimerTask,
     updateTimerTask,
@@ -12,6 +11,12 @@
   } from "$lib/api/cronoTask.js";
 
   export let data;
+
+  // console.log(data.cronoTasks);
+
+  let titleEditMode = false;
+  let idTaskToUpdate = "";
+  let inputValueToUpdate = "";
 
   let timerTasks = data.timerTasks;
   let cronoTasks = data.cronoTasks;
@@ -82,6 +87,60 @@
       }
     }
   }
+
+  function handleTransformInput(e) {
+    titleEditMode = true;
+    idTaskToUpdate = e.target.id;
+  }
+
+  async function blurOrEnterKey(e) {
+    if (e.type === "keydown" && e.key !== "Enter") {
+      return;
+    }
+    inputValueToUpdate = e.target.value;
+    titleEditMode = false;
+
+    await handleUpdateTitleTimeTask(e);
+  }
+
+  async function handleUpdateTitleTimeTask(e) {
+    const taskId = e.target.id;
+
+    const taskFound = timerTasks.find((task) => {
+      return task._id === taskId;
+    });
+
+    if (taskFound) {
+      taskFound.title = inputValueToUpdate;
+    }
+
+    // It's a timer task
+    if (taskFound) {
+      console.log("timer");
+      try {
+        const res = await updateTimerTask(taskFound);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    // It's a crono task
+    else {
+      console.log("crono");
+      const cronoTaskFound = cronoTasks.find((task) => {
+        return task._id === taskId;
+      });
+
+      cronoTaskFound.title = inputValueToUpdate;
+
+      try {
+        const res = await updateCronoTask(cronoTaskFound);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 </script>
 
 <main>
@@ -101,11 +160,23 @@
     {#if !timerTasks.length && !cronoTasks.length}
       <p>No time tasks</p>
     {:else}
-    <section class="timer-task-container">
+      <section class="timer-task-container">
         <h2>Timer tasks</h2>
         {#each timerTasks as timerTask}
           <ul>
-            <li>{timerTask.title}</li>
+            {#if titleEditMode && idTaskToUpdate === timerTask._id}
+              <input
+                id={timerTask._id}
+                autofocus
+                on:blur={blurOrEnterKey}
+                on:keydown={blurOrEnterKey}
+                value={timerTask.title}
+              />
+            {:else}
+              <li id={timerTask._id} on:dblclick={handleTransformInput}>
+                {timerTask.title} ✏️
+              </li>
+            {/if}
             <li>{timerTask.maxTime}</li>
             <button id={timerTask._id} on:click={handleDeleteTimeTask}
               >Delete timerTask</button
@@ -117,9 +188,22 @@
         <h2>Crono tasks</h2>
         {#each cronoTasks as cronoTask}
           <ul>
-            <li>{cronoTask.title}</li>
+            {#if titleEditMode && idTaskToUpdate === cronoTask._id}
+              <input
+                id={cronoTask._id}
+                autofocus
+                on:blur={blurOrEnterKey}
+                on:keydown={blurOrEnterKey}
+                value={cronoTask.title}
+              />
+            {:else}
+              <li id={cronoTask._id} on:dblclick={handleTransformInput}>
+                {cronoTask.title} ✏️
+              </li>
+            {/if}
+            <li>00:00</li>
             <button id={cronoTask._id} on:click={handleDeleteTimeTask}
-              >Delete cronoTask</button
+              >Delete timerTask</button
             >
           </ul>
         {/each}
@@ -153,14 +237,14 @@
     .task-container {
       display: flex;
       gap: 20px;
-      
+
       ul {
         background-color: rgb(20, 20, 20);
         padding: 10px;
         width: 100%;
         text-align: center;
         list-style: none;
-  
+
         button {
           background-color: rgb(77, 18, 18);
           color: rgb(217, 217, 217);

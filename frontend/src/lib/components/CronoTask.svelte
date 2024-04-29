@@ -1,4 +1,7 @@
 <script>
+  import RunImg from "$lib/assets/run.png";
+  import PauseImg from "$lib/assets/pause.png";
+  import StopImg from "$lib/assets/stop.png";
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
 
@@ -54,6 +57,10 @@
       console.error(error);
     }
   }
+
+  function handleClick(e) {
+    console.log(e.target.alt);
+  }
 </script>
 
 <div>
@@ -70,6 +77,17 @@
       {cronoTask.title} ✏️
     </p>
   {/if}
+  <div class="botones">
+    <a on:click={handleClick}>
+      <img src={PauseImg} alt="pause" />
+    </a>
+    <a on:click={handleClick}>
+      <img src={RunImg} alt="run" />
+    </a>
+    <a on:click={handleClick}>
+      <img src={StopImg} alt="stop" />
+    </a>
+  </div>
   <p>00:00</p>
   <button id={cronoTask._id} on:click={handleDeleteTimeTask}
     >Delete timerTask</button
@@ -83,6 +101,27 @@
     width: 100%;
     text-align: center;
     list-style: none;
+    margin-bottom: 10px;
+    
+    .botones {
+      margin-bottom: 0;
+      display: flex;
+      gap: 5px;
+
+      a {
+        cursor: pointer;
+        display: block;
+        width: 35px;
+
+        img {
+          background-color: white;
+          border-radius: 8px;
+          padding: 4px;
+          margin-top: 5px;
+          width: 100%;
+        }
+      }
+    }
 
     button {
       background-color: rgb(77, 18, 18);

@@ -26,10 +26,10 @@ const cronoTaskSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  actualTime: {
-    type: String,
-    default: "00:00:00",
-  },
+  // actualTime: {
+  //   type: String,
+  //   default: "00:00:00",
+  // },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

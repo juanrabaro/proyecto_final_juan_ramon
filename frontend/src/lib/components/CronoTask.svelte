@@ -19,10 +19,11 @@
   let cronoState = "stop";
   const timer = new Timer();
   let actualTime = "00:00:00";
+  let pausedTime = 0;
 
-  if (cronoTask.timeStarted) {
+  if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
     const elapsedSecondsTotal =
-      (new Date() - new Date(cronoTask.timeStarted)) / 1000;
+      ((new Date() - new Date(cronoTask.timeStarted)) - cronoTask.stoppedTime) / 1000;
     const hours = Math.floor(elapsedSecondsTotal / 3600);
     const minutes = Math.floor((elapsedSecondsTotal % 3600) / 60);
     const seconds = Math.floor(elapsedSecondsTotal % 60);
@@ -34,10 +35,27 @@
       // console.log(getTime());
       actualTime = getTime();
     });
+  } else if (cronoTask.stoppedMoment) {
+    const elapsedSecondsTotal =
+      ((new Date(cronoTask.stoppedMoment) - new Date(cronoTask.timeStarted)) - cronoTask.stoppedTime) /
+      1000;
+    const hours = Math.floor(elapsedSecondsTotal / 3600);
+    const minutes = Math.floor((elapsedSecondsTotal % 3600) / 60);
+    const seconds = Math.floor(elapsedSecondsTotal % 60);
+
+    actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    cronoState = "pause";
+    timer.start({ startValues: { seconds: elapsedSecondsTotal } });
+    timer.pause();
   }
 
   function getTime() {
     return timer.getTimeValues().toString();
+  }
+
+  function timeStringToSeconds(timeString) {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
   }
 
   async function handleClickButton(e) {
@@ -58,7 +76,10 @@
             actualTime = getTime();
           });
         } else {
-          timer.start();
+          console.log("llega");
+          console.log(actualTime);
+          console.log(timeStringToSeconds(actualTime));
+          timer.start({ startValues: { seconds: pausedTime } });
         }
       } catch (error) {
         console.error(error);
@@ -73,6 +94,7 @@
 
         cronoState = "pause";
         timer.pause();
+        pausedTime = timer.getTimeValues();
       } catch (error) {
         console.error(error);
       }

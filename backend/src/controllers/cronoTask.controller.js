@@ -92,7 +92,7 @@ async function startCrono(req, res) {
         running: "running",
         stoppedMoment: null,
         actualTimeForPause: "00:00:00",
-        stoppedTime: oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment),
+        stoppedTime: oldTask.stoppedTime + ((horaActual() - oldTask.stoppedMoment) / 1000),
       },
       { new: true });
 

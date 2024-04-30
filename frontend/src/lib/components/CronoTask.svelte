@@ -22,9 +22,13 @@
   let pausedTime = 0;
 
   if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
-    const elapsedSecondsTotal =
-      (new Date() - new Date(cronoTask.timeStarted) - cronoTask.stoppedTime) /
-      1000;
+    console.log(cronoTask.stoppedTime);
+    const elapsedSecondsTotal = Math.trunc(
+      (new Date() -
+        new Date(cronoTask.timeStarted) -
+        cronoTask.stoppedTime * 1000) /
+        1000,
+    );
     const hours = Math.trunc(elapsedSecondsTotal / 3600);
     const minutes = Math.trunc((elapsedSecondsTotal % 3600) / 60);
     const seconds = Math.trunc(elapsedSecondsTotal % 60);
@@ -72,14 +76,13 @@
             actualTime = getTime();
           });
         } else {
-          console.log("llega");
-          console.log(pausedTime);
-          console.log(timeStringToSeconds(pausedTime));
-          console.log(actualTime);
+          // console.log("llega");
+          // console.log(pausedTime);
+          // console.log(timeStringToSeconds(pausedTime));
+          // console.log(actualTime);
           timer.start({
             startValues: { seconds: timeStringToSeconds(pausedTime) },
           });
-          console.log(timer.isRunning());
         }
       } catch (error) {
         console.error(error);

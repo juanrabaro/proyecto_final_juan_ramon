@@ -20,32 +20,77 @@
   const timer = new Timer();
   let actualTime = "00:00:00";
 
+  if (cronoTask.timeStarted) {
+    const elapsedSecondsTotal =
+      (new Date() - new Date(cronoTask.timeStarted)) / 1000;
+    const hours = Math.floor(elapsedSecondsTotal / 3600);
+    const minutes = Math.floor((elapsedSecondsTotal % 3600) / 60);
+    const seconds = Math.floor(elapsedSecondsTotal % 60);
+
+    actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    cronoState = "running";
+    timer.start({ startValues: { seconds: elapsedSecondsTotal } });
+    timer.addEventListener("secondsUpdated", function (e) {
+      // console.log(getTime());
+      actualTime = getTime();
+    });
+  }
+
   function getTime() {
     return timer.getTimeValues().toString();
   }
 
-  function handleClickButton(e) {
-    const boton = e.target.alt;
-    if (boton === "run") {
-      cronoState = "running";
-
-      if (getTime() === "00:00:00") {
-        timer.start();
-        timer.addEventListener("secondsUpdated", function (e) {
-          // console.log(getTime());
-          actualTime = getTime();
+  async function handleClickButton(e) {
+    const botonClickado = e.target.alt;
+    if (botonClickado === "run") {
+      try {
+        const res = await updateCronoTask({
+          _id: cronoTask._id,
+          running: "run",
         });
-      } else {
-        timer.start();
+        console.log(res);
+
+        cronoState = "running";
+        if (getTime() === "00:00:00") {
+          timer.start({ startValues: { seconds: actualTime } });
+          timer.addEventListener("secondsUpdated", function (e) {
+            // console.log(getTime());
+            actualTime = getTime();
+          });
+        } else {
+          timer.start();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } else if (boton === "pause") {
-      cronoState = "pause";
-      timer.pause();
+    } else if (botonClickado === "pause") {
+      try {
+        const res = await updateCronoTask({
+          _id: cronoTask._id,
+          running: "pause",
+        });
+        console.log(res);
+
+        cronoState = "pause";
+        timer.pause();
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      cronoState = "stop";
-      timer.stop();
-      timer.removeAllEventListeners();
-      actualTime = "00:00:00";
+      try {
+        const res = await updateCronoTask({
+          _id: cronoTask._id,
+          running: "stop",
+        });
+        console.log(res);
+
+        cronoState = "stop";
+        timer.stop();
+        timer.removeAllEventListeners();
+        actualTime = "00:00:00";
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 

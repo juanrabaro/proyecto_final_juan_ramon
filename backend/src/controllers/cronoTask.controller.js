@@ -64,7 +64,7 @@ async function updateTitle(req, res) {
   res.json(updatedTask);
 }
 const horaActual = () => {
-  return Date.now() / 1000;
+  return new Date();
 }
 async function startCrono(req, res) {
   const oldTask = await CronoTask.findById(req.params.id);
@@ -128,7 +128,7 @@ async function stopCrono(req, res) {
         timeStarted: null,
         stoppedMoment: null,
         stoppedTime: 0,
-        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))),
+        totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))) / 1000),
       },
       { new: true });
   
@@ -141,7 +141,7 @@ async function stopCrono(req, res) {
         timeStarted: null,
         stoppedMoment: null,
         stoppedTime: 0,
-        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
+        totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime) / 1000),
       },
       { new: true });
   

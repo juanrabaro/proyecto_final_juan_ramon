@@ -23,10 +23,11 @@
 
   if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
     const elapsedSecondsTotal =
-      ((new Date() - new Date(cronoTask.timeStarted)) - cronoTask.stoppedTime) / 1000;
-    const hours = Math.floor(elapsedSecondsTotal / 3600);
-    const minutes = Math.floor((elapsedSecondsTotal % 3600) / 60);
-    const seconds = Math.floor(elapsedSecondsTotal % 60);
+      (new Date() - new Date(cronoTask.timeStarted) - cronoTask.stoppedTime) /
+      1000;
+    const hours = Math.trunc(elapsedSecondsTotal / 3600);
+    const minutes = Math.trunc((elapsedSecondsTotal % 3600) / 60);
+    const seconds = Math.trunc(elapsedSecondsTotal % 60);
 
     actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     cronoState = "running";
@@ -39,14 +40,17 @@
     const elapsedSecondsTotal =
       ((new Date(cronoTask.stoppedMoment) - new Date(cronoTask.timeStarted)) - cronoTask.stoppedTime) /
       1000;
-    const hours = Math.floor(elapsedSecondsTotal / 3600);
-    const minutes = Math.floor((elapsedSecondsTotal % 3600) / 60);
-    const seconds = Math.floor(elapsedSecondsTotal % 60);
+    
+    const hours = Math.trunc(elapsedSecondsTotal / 3600);
+    const minutes = Math.trunc((elapsedSecondsTotal % 3600) / 60);
+    const seconds = Math.trunc(elapsedSecondsTotal % 60);
 
     actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    pausedTime = actualTime;
     cronoState = "pause";
-    timer.start({ startValues: { seconds: elapsedSecondsTotal } });
-    timer.pause();
+    timer.addEventListener("secondsUpdated", function (e) {
+      actualTime = getTime();
+    });
   }
 
   function getTime() {
@@ -54,7 +58,7 @@
   }
 
   function timeStringToSeconds(timeString) {
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   }
 
@@ -69,7 +73,7 @@
         console.log(res);
 
         cronoState = "running";
-        if (getTime() === "00:00:00") {
+        if (actualTime === "00:00:00") {
           timer.start({ startValues: { seconds: actualTime } });
           timer.addEventListener("secondsUpdated", function (e) {
             // console.log(getTime());
@@ -77,9 +81,13 @@
           });
         } else {
           console.log("llega");
+          console.log(pausedTime);
+          console.log(timeStringToSeconds(pausedTime));
           console.log(actualTime);
-          console.log(timeStringToSeconds(actualTime));
-          timer.start({ startValues: { seconds: pausedTime } });
+          timer.start({
+            startValues: { seconds: timeStringToSeconds(pausedTime) },
+          });
+          console.log(timer.isRunning());
         }
       } catch (error) {
         console.error(error);
@@ -94,7 +102,8 @@
 
         cronoState = "pause";
         timer.pause();
-        pausedTime = timer.getTimeValues();
+        // console.log(timer.getTimeValues().toString());
+        pausedTime = timer.getTimeValues().toString();
       } catch (error) {
         console.error(error);
       }

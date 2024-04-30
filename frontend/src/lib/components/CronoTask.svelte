@@ -1,4 +1,5 @@
 <script>
+  import { Timer } from "easytimer.js";
   import RunImg from "$lib/assets/run.png";
   import PauseImg from "$lib/assets/pause.png";
   import StopImg from "$lib/assets/stop.png";
@@ -12,6 +13,41 @@
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
+
+  // console.log(cronoTask);
+
+  let cronoState = "stop";
+  const timer = new Timer();
+  let actualTime = "00:00:00";
+
+  function getTime() {
+    return timer.getTimeValues().toString();
+  }
+
+  function handleClickButton(e) {
+    const boton = e.target.alt;
+    if (boton === "run") {
+      cronoState = "running";
+
+      if (getTime() === "00:00:00") {
+        timer.start();
+        timer.addEventListener("secondsUpdated", function (e) {
+          // console.log(getTime());
+          actualTime = getTime();
+        });
+      } else {
+        timer.start();
+      }
+    } else if (boton === "pause") {
+      cronoState = "pause";
+      timer.pause();
+    } else {
+      cronoState = "stop";
+      timer.stop();
+      timer.removeAllEventListeners();
+      actualTime = "00:00:00";
+    }
+  }
 
   async function handleDeleteTimeTask(e) {
     const taskId = e.target.id;
@@ -57,13 +93,9 @@
       console.error(error);
     }
   }
-
-  function handleClick(e) {
-    console.log(e.target.alt);
-  }
 </script>
 
-<div>
+<div class="card">
   {#if titleEditMode && idTaskToUpdate === cronoTask._id}
     <input
       id={cronoTask._id}
@@ -77,53 +109,73 @@
       {cronoTask.title} ✏️
     </p>
   {/if}
+  <p>{actualTime}</p>
   <div class="botones">
-    <a on:click={handleClick}>
-      <img src={PauseImg} alt="pause" />
-    </a>
-    <a on:click={handleClick}>
-      <img src={RunImg} alt="run" />
-    </a>
-    <a on:click={handleClick}>
-      <img src={StopImg} alt="stop" />
-    </a>
+    {#if cronoState === "stop"}
+      <button on:click={handleClickButton}>
+        <img src={RunImg} alt="run" />
+      </button>
+    {:else if cronoState === "pause"}
+      <button on:click={handleClickButton}>
+        <img src={StopImg} alt="stop" />
+      </button>
+      <button on:click={handleClickButton}>
+        <img src={RunImg} alt="run" />
+      </button>
+      <!-- running -->
+    {:else}
+      <button on:click={handleClickButton}>
+        <img src={StopImg} alt="stop" />
+      </button>
+      <button on:click={handleClickButton}>
+        <img src={PauseImg} alt="pause" />
+      </button>
+    {/if}
   </div>
-  <p>00:00</p>
-  <button id={cronoTask._id} on:click={handleDeleteTimeTask}
-    >Delete timerTask</button
+  <button
+    class="delete-button"
+    id={cronoTask._id}
+    on:click={handleDeleteTimeTask}>Delete timerTask</button
   >
 </div>
 
 <style lang="scss">
-  div {
+  .card {
     background-color: rgb(20, 20, 20);
     padding: 10px;
     width: 100%;
     text-align: center;
     list-style: none;
     margin-bottom: 10px;
-    
+
     .botones {
       margin-bottom: 0;
       display: flex;
       gap: 5px;
 
-      a {
+      button {
         cursor: pointer;
         display: block;
         width: 35px;
+        height: 35px;
+        padding: 0;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        border-radius: 6px;
+        border: none;
 
         img {
           background-color: white;
-          border-radius: 8px;
-          padding: 4px;
-          margin-top: 5px;
+          border-radius: 6px;
+          padding: 6px;
+          margin-top: 0;
           width: 100%;
+          height: 100%;
         }
       }
     }
 
-    button {
+    .delete-button {
       background-color: rgb(77, 18, 18);
       color: rgb(217, 217, 217);
       border: none;
@@ -132,7 +184,7 @@
       cursor: pointer;
       border-radius: 5px;
     }
-    button:hover {
+    .delete-button:hover {
       background-color: rgb(122, 28, 28);
     }
   }

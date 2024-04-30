@@ -14,7 +14,7 @@
   export let idTaskToUpdate;
   export let inputValueToUpdate;
 
-  console.log(cronoTask);
+  // console.log(cronoTask);
 
   let cronoState = "stop";
   const timer = new Timer();
@@ -37,20 +37,8 @@
       actualTime = getTime();
     });
   } else if (cronoTask.stoppedMoment) {
-    const elapsedSecondsTotal = Math.trunc(
-      (new Date(cronoTask.stoppedMoment) -
-        new Date(cronoTask.timeStarted) -
-        cronoTask.stoppedTime) /
-        1000,
-    );
-
-    const hours = Math.trunc(elapsedSecondsTotal / 3600);
-    const minutes = Math.trunc((elapsedSecondsTotal % 3600) / 60);
-    const seconds = Math.trunc(elapsedSecondsTotal % 60);
-
-    actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    actualTime = cronoTask.actualTimeForPause;
     pausedTime = actualTime;
-    console.log(actualTime);
     cronoState = "pause";
     timer.addEventListener("secondsUpdated", function (e) {
       actualTime = getTime();
@@ -101,6 +89,7 @@
         const res = await updateCronoTask({
           _id: cronoTask._id,
           running: "pause",
+          actualTimeForPause: actualTime,
         });
         console.log(res);
 

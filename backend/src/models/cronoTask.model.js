@@ -26,9 +26,9 @@ const cronoTaskSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  actualTimeForPause: {
+  showedCronoForPause: {
     type: String,
-    default: "00:00:00",
+    default: "00:00:00:0",
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

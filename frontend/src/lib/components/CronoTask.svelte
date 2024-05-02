@@ -16,46 +16,41 @@
 
   // console.log(cronoTask);
 
-  let cronoState = "stop";
   const timer = new Timer();
-  let actualTime = "00:00:00";
-  let pausedTime = 0;
+  let cronoState = "stopped";
+  let showedCrono = "00:00:00:0";
+  // timer.start({ precision:"secondTenths", startValues: { secondTenths: 1000 } });
+  // timer.addEventListener("secondTenthsUpdated", function () {
+    //   hora = timer.getTimeValues().toString(['hours', 'minutes', 'seconds', 'secondTenths'])
+    // });
+    
+    if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
+      cronoState = "running";
 
-  if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
-    console.log(cronoTask.stoppedTime);
-    const elapsedSecondsTotal = Math.trunc(
-      (new Date() -
-        new Date(cronoTask.timeStarted) -
-        cronoTask.stoppedTime * 1000) /
-        1000,
-    );
-    const hours = Math.trunc(elapsedSecondsTotal / 3600);
-    const minutes = Math.trunc((elapsedSecondsTotal % 3600) / 60);
-    const seconds = Math.trunc(elapsedSecondsTotal % 60);
+      const actualTime = (new Date() - new Date(cronoTask.timeStarted) - cronoTask.stoppedTime * 100) / 100;
 
-    actualTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-    cronoState = "running";
-    timer.start({ startValues: { seconds: elapsedSecondsTotal } });
-    timer.addEventListener("secondsUpdated", function (e) {
-      // console.log(getTime());
-      actualTime = getTime();
-    });
+      timer.start({ precision:"secondTenths", startValues: { secondTenths: actualTime } });
+      timer.addEventListener("secondTenthsUpdated", function () {
+        showedCrono = getTime();
+      });
   } else if (cronoTask.stoppedMoment) {
-    actualTime = cronoTask.actualTimeForPause;
-    pausedTime = actualTime;
-    cronoState = "pause";
-    timer.addEventListener("secondsUpdated", function (e) {
-      actualTime = getTime();
-    });
+    cronoState = "paused";
+    showedCrono = cronoTask.showedCronoForPause;
   }
 
   function getTime() {
-    return timer.getTimeValues().toString();
+    return timer
+      .getTimeValues()
+      .toString(["hours", "minutes", "seconds", "secondTenths"]);
   }
 
-  function timeStringToSeconds(timeString) {
-    const [hours, minutes, seconds] = timeString.split(":").map(Number);
-    return hours * 3600 + minutes * 60 + seconds;
+  function transformIntoSecondTenths(time) {
+    const timeSplited = time.split(":");
+    const hours = parseInt(timeSplited[0]) * 36000;
+    const minutes = parseInt(timeSplited[1]) * 600;
+    const seconds = parseInt(timeSplited[2]) * 10;
+    const secondTenths = parseInt(timeSplited[3]);
+    return hours + minutes + seconds + secondTenths;
   }
 
   async function handleClickButton(e) {
@@ -69,19 +64,16 @@
         console.log(res);
 
         cronoState = "running";
-        if (actualTime === "00:00:00") {
-          timer.start({ startValues: { seconds: actualTime } });
-          timer.addEventListener("secondsUpdated", function (e) {
-            // console.log(getTime());
-            actualTime = getTime();
+
+        if (showedCrono === "00:00:00:0") {
+          timer.start({ precision: "secondTenths" });
+          timer.addEventListener("secondTenthsUpdated", function () {
+            showedCrono = getTime();
           });
         } else {
-          // console.log("llega");
-          // console.log(pausedTime);
-          // console.log(timeStringToSeconds(pausedTime));
-          // console.log(actualTime);
-          timer.start({
-            startValues: { seconds: timeStringToSeconds(pausedTime) },
+          timer.start({ precision: "secondTenths", startValues: { secondTenths: transformIntoSecondTenths(showedCrono) } });
+          timer.addEventListener("secondTenthsUpdated", function () {
+            showedCrono = getTime();
           });
         }
       } catch (error) {
@@ -92,17 +84,18 @@
         const res = await updateCronoTask({
           _id: cronoTask._id,
           running: "pause",
-          actualTimeForPause: actualTime,
+          showedCronoForPause: showedCrono,
         });
         console.log(res);
 
-        cronoState = "pause";
+        cronoState = "paused";
+
         timer.pause();
-        // console.log(timer.getTimeValues().toString());
-        pausedTime = timer.getTimeValues().toString();
+
       } catch (error) {
         console.error(error);
       }
+      // Stop crono
     } else {
       try {
         const res = await updateCronoTask({
@@ -111,10 +104,11 @@
         });
         console.log(res);
 
-        cronoState = "stop";
+        cronoState = "stopped";
+
         timer.stop();
-        timer.removeAllEventListeners();
-        actualTime = "00:00:00";
+        showedCrono = "00:00:00:0";
+
       } catch (error) {
         console.error(error);
       }
@@ -169,6 +163,7 @@
 
 <div class="card">
   {#if titleEditMode && idTaskToUpdate === cronoTask._id}
+    <!-- svelte-ignore a11y-autofocus -->
     <input
       id={cronoTask._id}
       autofocus
@@ -181,13 +176,13 @@
       {cronoTask.title} ✏️
     </p>
   {/if}
-  <p>{actualTime}</p>
+  <p>{showedCrono}</p>
   <div class="botones">
-    {#if cronoState === "stop"}
+    {#if cronoState === "stopped"}
       <button on:click={handleClickButton}>
         <img src={RunImg} alt="run" />
       </button>
-    {:else if cronoState === "pause"}
+    {:else if cronoState === "paused"}
       <button on:click={handleClickButton}>
         <img src={StopImg} alt="stop" />
       </button>

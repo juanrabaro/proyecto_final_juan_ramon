@@ -64,7 +64,7 @@ async function updateTitle(req, res) {
   res.json(updatedTask);
 }
 const horaActual = () => {
-  return Date.now() / 1000;
+  return new Date().getTime() / 100;
 }
 async function startTimer(req, res) {
   const oldTask = await TimerTask.findById(req.params.id);
@@ -153,6 +153,7 @@ async function stopTimer(req, res) {
     res.json(updatedTask);
   }
 }
+
 export const updateTimerTask = async (req, res) => {
 
   try {

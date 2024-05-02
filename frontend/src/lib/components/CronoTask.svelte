@@ -19,20 +19,22 @@
   const timer = new Timer();
   let cronoState = "stopped";
   let showedCrono = "00:00:00:0";
-  // timer.start({ precision:"secondTenths", startValues: { secondTenths: 1000 } });
-  // timer.addEventListener("secondTenthsUpdated", function () {
-    //   hora = timer.getTimeValues().toString(['hours', 'minutes', 'seconds', 'secondTenths'])
-    // });
-    
-    if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
-      cronoState = "running";
 
-      const actualTime = (new Date() - new Date(cronoTask.timeStarted) - cronoTask.stoppedTime * 100) / 100;
+  if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
+    cronoState = "running";
+    const actualTime =
+      (new Date() -
+        new Date(cronoTask.timeStarted) -
+        cronoTask.stoppedTime * 100) /
+      100;
 
-      timer.start({ precision:"secondTenths", startValues: { secondTenths: actualTime } });
-      timer.addEventListener("secondTenthsUpdated", function () {
-        showedCrono = getTime();
-      });
+    timer.start({
+      precision: "secondTenths",
+      startValues: { secondTenths: actualTime },
+    });
+    timer.addEventListener("secondTenthsUpdated", function () {
+      showedCrono = getTime();
+    });
   } else if (cronoTask.stoppedMoment) {
     cronoState = "paused";
     showedCrono = cronoTask.showedCronoForPause;
@@ -71,7 +73,12 @@
             showedCrono = getTime();
           });
         } else {
-          timer.start({ precision: "secondTenths", startValues: { secondTenths: transformIntoSecondTenths(showedCrono) } });
+          timer.start({
+            precision: "secondTenths",
+            startValues: {
+              secondTenths: transformIntoSecondTenths(showedCrono),
+            },
+          });
           timer.addEventListener("secondTenthsUpdated", function () {
             showedCrono = getTime();
           });
@@ -91,7 +98,6 @@
         cronoState = "paused";
 
         timer.pause();
-
       } catch (error) {
         console.error(error);
       }
@@ -108,7 +114,6 @@
 
         timer.stop();
         showedCrono = "00:00:00:0";
-
       } catch (error) {
         console.error(error);
       }

@@ -16,14 +16,27 @@
 
   // console.log(timerTask);
 
-  const timer = new Timer();
+  const timer = new Timer({
+    countdown: true,
+    precision: "secondTenths",
+    target: { secondTenths: 0 },
+  });
   let cronoState = "stopped";
-  let maximoTiempo = (timerTask.maxTime).toString();
+  let maximoTiempo = timerTask.maxTime.toString();
 
   maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
   let showedCrono = `00:${maximoTiempo}:00:0`;
 
+  $: {
+    maximoTiempo = timerTask.maxTime.toString();
+    maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+    if (cronoState === "stopped") {
+      showedCrono = `00:${maximoTiempo}:00:0`;
+    }
+  }
+
   if (timerTask.timeStarted && !timerTask.stoppedMoment) {
+    console.log("tiempo corriendo");
     cronoState = "running";
     const actualTime =
       (new Date() -
@@ -32,6 +45,7 @@
       100;
 
     timer.start({
+      countdown: true,
       precision: "secondTenths",
       startValues: { secondTenths: actualTime },
     });
@@ -39,6 +53,7 @@
       showedCrono = getTime();
     });
   } else if (timerTask.stoppedMoment) {
+    console.log("tiempo parado");
     console.log(timerTask.stoppedMoment);
     // cronoState = "paused";
     // showedCrono = timerTask.showedCronoForPause;
@@ -63,22 +78,33 @@
     const botonClickado = e.target.alt;
     if (botonClickado === "run") {
       try {
-        const res = await updatetimerTask({
-          _id: timerTask._id,
-          running: "run",
-        });
-        console.log(res);
+        // const res = await updateTimerTask({
+        //   _id: timerTask._id,
+        //   running: "run",
+        // });
+        // console.log(res);
 
         cronoState = "running";
 
-        if (showedCrono === "00:00:00:0") {
-          timer.start({ precision: "secondTenths" });
+        if (showedCrono === `00:${maximoTiempo}:00:0`) {
+          timer.start({
+            startValues: {
+              secondTenths: transformIntoSecondTenths(showedCrono),
+            },
+          });
           timer.addEventListener("secondTenthsUpdated", function () {
             showedCrono = getTime();
           });
+          timer.addEventListener("targetAchieved", function (e) {
+            console.log("Time has run out!");
+            alert(`The timer ${timerTask.title} has finished!`);
+            cronoState = "stopped";
+            maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+            showedCrono = `00:${maximoTiempo}:00:0`;
+            timer.removeAllEventListeners();
+          });
         } else {
           timer.start({
-            precision: "secondTenths",
             startValues: {
               secondTenths: transformIntoSecondTenths(showedCrono),
             },
@@ -92,12 +118,12 @@
       }
     } else if (botonClickado === "pause") {
       try {
-        const res = await updatetimerTask({
-          _id: timerTask._id,
-          running: "pause",
-          showedCronoForPause: showedCrono,
-        });
-        console.log(res);
+        // const res = await updateTimerTask({
+        //   _id: timerTask._id,
+        //   running: "pause",
+        //   showedCronoForPause: showedCrono,
+        // });
+        // console.log(res);
 
         cronoState = "paused";
 
@@ -108,16 +134,19 @@
       // Stop crono
     } else {
       try {
-        const res = await updatetimerTask({
-          _id: timerTask._id,
-          running: "stop",
-        });
-        console.log(res);
+        // const res = await updateTimerTask({
+        //   _id: timerTask._id,
+        //   running: "stop",
+        // });
+        // console.log(res);
 
         cronoState = "stopped";
 
+        maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+        showedCrono = `00:${maximoTiempo}:00:0`;
+
         timer.stop();
-        showedCrono = "00:00:00:0";
+        timer.removeEventListener("targetAchieved");
       } catch (error) {
         console.error(error);
       }
@@ -171,7 +200,7 @@
 
 <div class="card">
   {#if titleEditMode && idTaskToUpdate === timerTask._id}
-  <!-- svelte-ignore a11y-autofocus -->
+    <!-- svelte-ignore a11y-autofocus -->
     <input
       id={timerTask._id}
       autofocus
@@ -208,8 +237,10 @@
       </button>
     {/if}
   </div>
-  <button class="delete-button" id={timerTask._id} on:click={handleDeleteTimeTask}
-    >Delete timerTask</button
+  <button
+    class="delete-button"
+    id={timerTask._id}
+    on:click={handleDeleteTimeTask}>Delete timerTask</button
   >
 </div>
 

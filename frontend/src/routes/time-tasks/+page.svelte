@@ -19,6 +19,7 @@
   let titleTimeTask = "";
   let maxTimeTimerTask = 30;
 
+
   async function createTimeTask() {
     if (!titleTimeTask.length) return;
 
@@ -48,11 +49,15 @@
   }
 
   function handleDeleteCronoTask(event) {
-    cronoTasks = cronoTasks.filter(task => task._id !== event.detail);
+    cronoTasks = cronoTasks.filter((task) => task._id !== event.detail);
   }
 
   function handleDeleteTimerTask(event) {
-    timerTasks = timerTasks.filter(task => task._id !== event.detail);
+    const newTimerTasks = timerTasks.filter(
+      (task) => task._id !== event.detail,
+    );
+    timerTasks = [];
+    timerTasks = newTimerTasks;
   }
 </script>
 

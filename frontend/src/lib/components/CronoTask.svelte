@@ -18,19 +18,32 @@
 
   const timer = new Timer();
   let cronoState = "stopped";
-  let showedCrono = "00:00:00:0";
-
+  let showedCrono = "00:00:00:0"; 
+  
+  $: {
+    if (cronoState === "stopped") {
+      console.log("llega");
+      showedCrono = "00:00:00:0";
+    } else if (cronoState === "paused") {
+      console.log("llega");
+      showedCrono = cronoTask.showedCronoForPause;
+    } else {
+      console.log("llega");
+      showedCrono = getTime();
+    }
+  }
+  
   if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
     cronoState = "running";
     const actualTime =
-      (new Date() -
+    (new Date() -
         new Date(cronoTask.timeStarted) -
         cronoTask.stoppedTime * 100) /
-      100;
-
-    timer.start({
-      precision: "secondTenths",
-      startValues: { secondTenths: actualTime },
+        100;
+        
+        timer.start({
+          precision: "secondTenths",
+          startValues: { secondTenths: actualTime },
     });
     timer.addEventListener("secondTenthsUpdated", function () {
       showedCrono = getTime();
@@ -44,9 +57,9 @@
     return timer
       .getTimeValues()
       .toString(["hours", "minutes", "seconds", "secondTenths"]);
-  }
-
-  function transformIntoSecondTenths(time) {
+    }
+    
+    function transformIntoSecondTenths(time) {
     const timeSplited = time.split(":");
     const hours = parseInt(timeSplited[0]) * 36000;
     const minutes = parseInt(timeSplited[1]) * 600;
@@ -126,7 +139,9 @@
     try {
       const res = await deleteCronoTask(taskId);
       console.log(res);
+
       dispatch("deleteCronoTask", taskId);
+    
     } catch (error) {
       console.error(error);
     }

@@ -49,7 +49,8 @@
   }
 
   function handleDeleteCronoTask(event) {
-    cronoTasks = cronoTasks.filter((task) => task._id !== event.detail);
+    const taskId = event.detail;
+    cronoTasks = cronoTasks.filter((task) => task._id !== taskId);
   }
 
   function handleDeleteTimerTask(event) {

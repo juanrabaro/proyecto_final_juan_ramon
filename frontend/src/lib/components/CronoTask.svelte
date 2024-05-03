@@ -18,32 +18,41 @@
 
   const timer = new Timer();
   let cronoState = "stopped";
-  let showedCrono = "00:00:00:0"; 
-  
+  let showedCrono = "00:00:00:0";
+
   $: {
-    if (cronoState === "stopped") {
-      console.log("llega");
+    // console.log(cronoTask);
+    if (cronoTask && cronoTask.running === "stopped") {
+      console.log("salta");
+      cronoState = "stopped";
+      timer.stop();
       showedCrono = "00:00:00:0";
-    } else if (cronoState === "paused") {
-      console.log("llega");
+    } else if (cronoTask && cronoTask.running === "running") {
+      console.log("salta");
+      cronoState = "running";
+      timer.start({ precision: "secondTenths" });
+      timer.addEventListener("secondTenthsUpdated", function () {
+        showedCrono = getTime();
+      });
+    } else if (cronoTask && cronoTask.running === "paused") {
+      console.log("salta");
+      cronoState = "paused";
+      timer.pause();
       showedCrono = cronoTask.showedCronoForPause;
-    } else {
-      console.log("llega");
-      showedCrono = getTime();
     }
   }
-  
+
   if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
     cronoState = "running";
     const actualTime =
-    (new Date() -
+      (new Date() -
         new Date(cronoTask.timeStarted) -
         cronoTask.stoppedTime * 100) /
-        100;
-        
-        timer.start({
-          precision: "secondTenths",
-          startValues: { secondTenths: actualTime },
+      100;
+
+    timer.start({
+      precision: "secondTenths",
+      startValues: { secondTenths: actualTime },
     });
     timer.addEventListener("secondTenthsUpdated", function () {
       showedCrono = getTime();
@@ -57,9 +66,9 @@
     return timer
       .getTimeValues()
       .toString(["hours", "minutes", "seconds", "secondTenths"]);
-    }
-    
-    function transformIntoSecondTenths(time) {
+  }
+
+  function transformIntoSecondTenths(time) {
     const timeSplited = time.split(":");
     const hours = parseInt(timeSplited[0]) * 36000;
     const minutes = parseInt(timeSplited[1]) * 600;
@@ -141,7 +150,6 @@
       console.log(res);
 
       dispatch("deleteCronoTask", taskId);
-    
     } catch (error) {
       console.error(error);
     }

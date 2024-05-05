@@ -6,6 +6,15 @@
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
 
+  // import { onMount } from 'svelte';
+  // let isMounted = false;
+  // onMount(() => {
+  //   isMounted = true;
+  // });
+  // if (!isMounted) return;
+
+  // console.log(cronoTask);
+
   const dispatch = createEventDispatcher();
 
   export let cronoTasks;
@@ -14,35 +23,24 @@
   export let idTaskToUpdate;
   export let inputValueToUpdate;
 
-  // console.log(cronoTask);
-
   const timer = new Timer();
   let cronoState = "stopped";
   let showedCrono = "00:00:00:0";
 
-  $: {
-    // console.log(cronoTask);
-    if (cronoTask && cronoTask.running === "stopped") {
-      console.log("salta");
-      cronoState = "stopped";
-      timer.stop();
-      showedCrono = "00:00:00:0";
-    } else if (cronoTask && cronoTask.running === "running") {
-      console.log("salta");
-      cronoState = "running";
-      timer.start({ precision: "secondTenths" });
-      timer.addEventListener("secondTenthsUpdated", function () {
-        showedCrono = getTime();
-      });
-    } else if (cronoTask && cronoTask.running === "paused") {
-      console.log("salta");
-      cronoState = "paused";
-      timer.pause();
-      showedCrono = cronoTask.showedCronoForPause;
-    }
-  }
+  // $: {
+  //   console.log("cronoState " + cronoTask.title + " ha cambiado a " + cronoState);
+  // }
 
-  if (cronoTask.timeStarted && !cronoTask.stoppedMoment) {
+  // $: if (cronoTask) {
+  // console.log("SALTA");
+  // console.log(cronoTask.running);
+  if (cronoTask.running === "stopped") {
+    console.log("salta stopped " + cronoTask.title);
+    cronoState = "stopped";
+    timer.stop();
+    showedCrono = "00:00:00:0";
+  } else if (cronoTask.running === "running") {
+    console.log("salta running " + cronoTask.title);
     cronoState = "running";
     const actualTime =
       (new Date() -
@@ -57,10 +55,19 @@
     timer.addEventListener("secondTenthsUpdated", function () {
       showedCrono = getTime();
     });
-  } else if (cronoTask.stoppedMoment) {
+  } else if (cronoTask.running === "paused") {
+    console.log("salta paused " + cronoTask.title);
     cronoState = "paused";
+    timer.start({
+      precision: "secondTenths",
+      startValues: {
+        secondTenths: transformIntoSecondTenths(cronoTask.showedCronoForPause),
+      },
+    });
+    timer.pause();
     showedCrono = cronoTask.showedCronoForPause;
   }
+  // }
 
   function getTime() {
     return timer
@@ -85,7 +92,8 @@
           _id: cronoTask._id,
           running: "run",
         });
-        console.log(res);
+        // console.log(res);
+        console.log("EMPIEZA");
 
         cronoState = "running";
 
@@ -115,7 +123,8 @@
           running: "pause",
           showedCronoForPause: showedCrono,
         });
-        console.log(res);
+        // console.log(res);
+        console.log("PAUSATE");
 
         cronoState = "paused";
 
@@ -130,7 +139,8 @@
           _id: cronoTask._id,
           running: "stop",
         });
-        console.log(res);
+        // console.log(res);
+        console.log("PARATE");
 
         cronoState = "stopped";
 

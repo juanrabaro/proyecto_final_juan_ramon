@@ -51,6 +51,7 @@
   function handleDeleteCronoTask(event) {
     const taskId = event.detail;
     cronoTasks = cronoTasks.filter((task) => task._id !== taskId);
+    console.log(cronoTasks);
   }
 
   function handleDeleteTimerTask(event) {
@@ -94,7 +95,7 @@
       </section>
       <section class="crono-task-container">
         <h2>Crono tasks</h2>
-        {#each cronoTasks as cronoTask}
+        {#each cronoTasks as cronoTask (cronoTask._id)}
           <CronoTask
             on:deleteCronoTask={handleDeleteCronoTask}
             {titleEditMode}

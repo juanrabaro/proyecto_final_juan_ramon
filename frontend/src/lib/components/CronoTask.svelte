@@ -6,41 +6,26 @@
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
 
-  // import { onMount } from 'svelte';
-  // let isMounted = false;
-  // onMount(() => {
-  //   isMounted = true;
-  // });
-  // if (!isMounted) return;
-
-  // console.log(cronoTask);
-
+  
   const dispatch = createEventDispatcher();
-
+  
   export let cronoTasks;
   export let cronoTask;
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
-
+  
   const timer = new Timer();
   let cronoState = "stopped";
   let showedCrono = "00:00:00:0";
+  
+  // console.log(cronoTask);
 
-  // $: {
-  //   console.log("cronoState " + cronoTask.title + " ha cambiado a " + cronoState);
-  // }
-
-  // $: if (cronoTask) {
-  // console.log("SALTA");
-  // console.log(cronoTask.running);
   if (cronoTask.running === "stopped") {
-    console.log("salta stopped " + cronoTask.title);
     cronoState = "stopped";
     timer.stop();
     showedCrono = "00:00:00:0";
   } else if (cronoTask.running === "running") {
-    console.log("salta running " + cronoTask.title);
     cronoState = "running";
     const actualTime =
       (new Date() -
@@ -56,7 +41,6 @@
       showedCrono = getTime();
     });
   } else if (cronoTask.running === "paused") {
-    console.log("salta paused " + cronoTask.title);
     cronoState = "paused";
     timer.start({
       precision: "secondTenths",
@@ -67,7 +51,6 @@
     timer.pause();
     showedCrono = cronoTask.showedCronoForPause;
   }
-  // }
 
   function getTime() {
     return timer

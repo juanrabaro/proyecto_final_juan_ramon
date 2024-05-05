@@ -36,6 +36,12 @@ const timerTaskSchema = new mongoose.Schema({
       return this.maxTime;
     },
   },
+  showedTimerForPause: {
+    type: String,
+    default: function () {
+      return (this.maxTime).toString();
+    },
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

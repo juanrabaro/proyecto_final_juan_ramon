@@ -82,7 +82,7 @@
     {:else}
       <section class="timer-task-container">
         <h2>Timer tasks</h2>
-        {#each timerTasks as timerTask}
+        {#each timerTasks as timerTask (timerTask._id)}
           <TimerTask
             on:deleteTimerTask={handleDeleteTimerTask}
             {titleEditMode}

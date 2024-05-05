@@ -27,36 +27,48 @@
   maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
   let showedCrono = `00:${maximoTiempo}:00:0`;
 
-  $: {
-    maximoTiempo = timerTask.maxTime.toString();
-    maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-    if (cronoState === "stopped") {
-      showedCrono = `00:${maximoTiempo}:00:0`;
-    }
-  }
-
   if (timerTask.timeStarted && !timerTask.stoppedMoment) {
     console.log("tiempo corriendo");
     cronoState = "running";
-    const actualTime =
-      (new Date() -
-        new Date(timerTask.timeStarted) -
-        timerTask.stoppedTime * 100) /
-      100;
 
-    timer.start({
-      countdown: true,
-      precision: "secondTenths",
-      startValues: { secondTenths: actualTime },
-    });
-    timer.addEventListener("secondTenthsUpdated", function () {
-      showedCrono = getTime();
-    });
+    const tiempoTranscurrido =
+      (new Date() - new Date(timerTask.timeStarted)) / 100;
+
+    let actualTime =
+      timerTask.maxTime * 60 * 10 - tiempoTranscurrido + timerTask.stoppedTime;
+
+    if (actualTime <= 0) {
+      actualTime = 0;
+      cronoState = "stopped";
+      maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+      showedCrono = `00:${maximoTiempo}:00:0`;
+      pararTimer();
+    } else {
+      timer.start({
+        countdown: true,
+        precision: "secondTenths",
+        startValues: { secondTenths: actualTime },
+      });
+      timer.addEventListener("secondTenthsUpdated", function () {
+        showedCrono = getTime();
+      });
+      timer.addEventListener("targetAchieved", function (e) {
+        console.log("Time has run out!");
+        if (typeof window !== "undefined") {
+          alert(`The timer ${timerTask.title} has finished!`);
+        }
+        cronoState = "stopped";
+        maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+        showedCrono = `00:${maximoTiempo}:00:0`;
+        pararTimer();
+        timer.removeAllEventListeners();
+      });
+    }
   } else if (timerTask.stoppedMoment) {
     console.log("tiempo parado");
-    console.log(timerTask.stoppedMoment);
-    // cronoState = "paused";
-    // showedCrono = timerTask.showedCronoForPause;
+
+    cronoState = "paused";
+    showedCrono = timerTask.showedTimerForPause;
   }
 
   function getTime() {
@@ -78,11 +90,11 @@
     const botonClickado = e.target.alt;
     if (botonClickado === "run") {
       try {
-        // const res = await updateTimerTask({
-        //   _id: timerTask._id,
-        //   running: "run",
-        // });
-        // console.log(res);
+        const res = await updateTimerTask({
+          _id: timerTask._id,
+          running: "run",
+        });
+        console.log(res);
 
         cronoState = "running";
 
@@ -101,6 +113,7 @@
             cronoState = "stopped";
             maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
             showedCrono = `00:${maximoTiempo}:00:0`;
+            pararTimer();
             timer.removeAllEventListeners();
           });
         } else {
@@ -118,12 +131,12 @@
       }
     } else if (botonClickado === "pause") {
       try {
-        // const res = await updateTimerTask({
-        //   _id: timerTask._id,
-        //   running: "pause",
-        //   showedCronoForPause: showedCrono,
-        // });
-        // console.log(res);
+        const res = await updateTimerTask({
+          _id: timerTask._id,
+          running: "pause",
+          showedTimerForPause: showedCrono,
+        });
+        console.log(res);
 
         cronoState = "paused";
 
@@ -131,14 +144,14 @@
       } catch (error) {
         console.error(error);
       }
-      // Stop crono
+      // Stop timer
     } else {
       try {
-        // const res = await updateTimerTask({
-        //   _id: timerTask._id,
-        //   running: "stop",
-        // });
-        // console.log(res);
+        const res = await updateTimerTask({
+          _id: timerTask._id,
+          running: "stop",
+        });
+        console.log(res);
 
         cronoState = "stopped";
 
@@ -150,6 +163,17 @@
       } catch (error) {
         console.error(error);
       }
+    }
+  }
+
+  async function pararTimer() {
+    try {
+      await updateTimerTask({
+        _id: timerTask._id,
+        running: "stop",
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 

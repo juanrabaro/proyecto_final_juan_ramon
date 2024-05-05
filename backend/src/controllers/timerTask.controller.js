@@ -78,7 +78,7 @@ async function startTimer(req, res) {
       req.params.id,
       {
         running: "running",
-        timeStarted: horaActual(),
+        timeStarted: new Date(),
       },
       { new: true });
 
@@ -91,6 +91,7 @@ async function startTimer(req, res) {
       {
         running: "running",
         stoppedMoment: null,
+        showedTimerForPause: oldTask.remainingTime,
         stoppedTime: oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment),
       },
       { new: true });
@@ -109,6 +110,7 @@ async function pauseTimer(req, res) {
     {
       running: "paused",
       stoppedMoment: horaActual(),
+      showedTimerForPause: req.body.showedTimerForPause,
       remainingTime: oldTask.maxTime - ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
     },
     { new: true });
@@ -131,6 +133,7 @@ async function stopTimer(req, res) {
         stoppedTime: 0,
         maxTime: oldTask.maxTime,
         remainingTime: oldTask.maxTime,
+        showedTimerForPause: (oldTask.maxTime).toString(),
         totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
       },
       { new: true });

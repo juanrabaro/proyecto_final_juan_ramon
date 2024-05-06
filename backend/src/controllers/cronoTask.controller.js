@@ -111,9 +111,14 @@ async function pauseCrono(req, res) {
       running: "paused",
       stoppedMoment: horaActual(),
       showedCronoForPause: req.body.showedCronoForPause,
+      // totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) / 100) - (oldTask.stoppedTime)),
     },
     { new: true });
 
+    console.log("diferencia total de tiempo: " + ((horaActual() - oldTask.timeStarted) / 100));
+    console.log("tiempo parado: " + (updatedTask.stoppedTime));
+    console.log("tiempo total: " + updatedTask.totalTime);
+    
   res.json(updatedTask);
 }
 async function stopCrono(req, res) {

@@ -111,14 +111,9 @@ async function pauseCrono(req, res) {
       running: "paused",
       stoppedMoment: horaActual(),
       showedCronoForPause: req.body.showedCronoForPause,
-      // totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) / 100) - (oldTask.stoppedTime)),
     },
     { new: true });
 
-    console.log("diferencia total de tiempo: " + ((horaActual() - oldTask.timeStarted) / 100));
-    console.log("tiempo parado: " + (updatedTask.stoppedTime));
-    console.log("tiempo total: " + updatedTask.totalTime);
-    
   res.json(updatedTask);
 }
 async function stopCrono(req, res) {
@@ -139,7 +134,7 @@ async function stopCrono(req, res) {
         totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))) / 100),
       },
       { new: true });
-  
+
     res.json(updatedTask);
   } else if (oldTask.running === "running") {
     const updatedTask = await CronoTask.findByIdAndUpdate(
@@ -150,10 +145,14 @@ async function stopCrono(req, res) {
         stoppedMoment: null,
         stoppedTime: 0,
         showedCronoForPause: "00:00:00:0",
-        totalTime: (oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime) / 100),
+        totalTime: (oldTask.totalTime + (((horaActual() - oldTask.timeStarted) / 100) - oldTask.stoppedTime)),
       },
       { new: true });
-  
+
+    console.log("tiempo total: " + ((horaActual() - oldTask.timeStarted) / 100));
+    console.log("tiempo parado: " + oldTask.stoppedTime);
+    console.log("total final: " + updatedTask.totalTime);
+
     res.json(updatedTask);
   }
 }

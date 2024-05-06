@@ -1,8 +1,11 @@
 <script>
+  import CronoStadisticCard from "../../lib/components/CronoStadisticCard.svelte";
+
   export let data;
 
   let cronoTasks = data.cronoTasks;
   let timerTasks = data.timerTasks;
+
 </script>
 
 <main>
@@ -10,10 +13,7 @@
   <section>
     <h2>Crono Tasks</h2>
     {#each cronoTasks as task (task._id)}
-      <div class="crono-tasks-container">
-        <p>{cronoTasks.indexOf(task) + 1}. {task.title}</p>
-        <p>{parseFloat((task.totalTime / 10).toFixed(1))} seconds</p>
-      </div>
+      <CronoStadisticCard {task} {cronoTasks} />
     {/each}
   </section>
   <section>
@@ -40,16 +40,6 @@
 
       h2 {
         text-align: center;
-      }
-
-      .crono-tasks-container {
-        background-color: rgb(89, 3, 3);
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin: 10px 0 10px 0;
-        padding: 10px;
-        border-radius: 8px;
       }
 
       .timer-tasks-container {

@@ -111,9 +111,14 @@ async function pauseTimer(req, res) {
       running: "paused",
       stoppedMoment: horaActual(),
       showedTimerForPause: req.body.showedTimerForPause,
-      remainingTime: oldTask.maxTime - ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
+      remainingTime: oldTask.maxTime * 60 * 10 - ((horaActual() - oldTask.timeStarted.getTime() / 100) - oldTask.stoppedTime),
     },
     { new: true });
+
+    // console.log(oldTask.maxTime * 60 * 10);
+    // console.log(horaActual() - oldTask.timeStarted.getTime() / 100);
+    // console.log(oldTask.timeStarted.getTime() / 100);
+    // console.log(oldTask.stoppedTime);
 
   res.json(updatedTask);
 }
@@ -134,9 +139,14 @@ async function stopTimer(req, res) {
         maxTime: oldTask.maxTime,
         remainingTime: oldTask.maxTime,
         showedTimerForPause: (oldTask.maxTime).toString(),
-        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
+        // totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - oldTask.stoppedTime),
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted.getTime() / 100) - oldTask.stoppedTime),
       },
       { new: true });
+
+      console.log(oldTask.totalTime);
+      console.log(horaActual()-oldTask.timeStarted.getTime()/100);
+      console.log(oldTask.stoppedTime);
   
     res.json(updatedTask);
   } else {
@@ -149,7 +159,7 @@ async function stopTimer(req, res) {
         stoppedTime: 0,
         maxTime: oldTask.maxTime,
         remainingTime: oldTask.maxTime,
-        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment))),
+        totalTime: oldTask.totalTime + ((horaActual() - oldTask.timeStarted.getTime() / 100) - (oldTask.stoppedTime + (horaActual() - oldTask.stoppedMoment.getTime() / 100))),
       },
       { new: true });
   

@@ -15,7 +15,7 @@
   let timerTasks = data.timerTasks;
   let cronoTasks = data.cronoTasks;
 
-  let taskTypeSelected = "crono";
+  let taskTypeSelected = "timer";
   let titleTimeTask = "";
   let maxTimeTimerTask = 30;
 

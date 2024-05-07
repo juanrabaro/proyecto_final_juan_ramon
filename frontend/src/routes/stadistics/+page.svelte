@@ -1,5 +1,6 @@
 <script>
   import CronoStadisticCard from "../../lib/components/CronoStadisticCard.svelte";
+  import TimerStadisticCard from "../../lib/components/TimerStadisticCard.svelte";
 
   export let data;
 
@@ -19,10 +20,7 @@
   <section>
     <h2>Timer Tasks</h2>
     {#each timerTasks as task (task._id)}
-      <div class="timer-tasks-container">
-        <p>{timerTasks.indexOf(task) + 1}. {task.title}</p>
-        <p>{task.totalTime}</p>
-      </div>
+      <TimerStadisticCard {task} {timerTasks} />
     {/each}
   </section>
 </main>
@@ -40,16 +38,6 @@
 
       h2 {
         text-align: center;
-      }
-
-      .timer-tasks-container {
-        background-color: rgb(89, 3, 3);
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin: 10px 0 10px 0;
-        padding: 10px;
-        border-radius: 8px;
       }
     }
   }

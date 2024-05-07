@@ -27,13 +27,11 @@
         .toString(["hours", "minutes", "seconds"]);
     });
   } else if (cronoState === "paused") {
-    // showedTime = formated(task.totalTime);
-    // console.log(task.maxTime);
-    // console.log(task.remainingTime);
     showedTime = formated(
-      (task.maxTime*60*10 - task.remainingTime) + task.totalTime,
+      task.maxTime * 60 * 10 - task.remainingTime + task.totalTime,
     );
   } else {
+    // cronoState === "stopped"
     showedTime = formated(task.totalTime);
   }
 
@@ -44,24 +42,11 @@
 
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
-
-  function transformIntoSecondTenths(time) {
-    time = time.toString();
-    console.log(time);
-    const timeSplited = time.split(":");
-    const hours = parseInt(timeSplited[0]) * 36000;
-    const minutes = parseInt(timeSplited[1]) * 600;
-    const seconds = parseInt(timeSplited[2]) * 10;
-    const secondTenths = parseInt(timeSplited[3]);
-    console.log(hours + minutes + seconds + secondTenths);
-    return hours + minutes + seconds + secondTenths;
-  }
 </script>
 
 <div class="timer-tasks-container">
   <p>{timerTasks.indexOf(task) + 1}. {task.title}</p>
   <p>{showedTime}</p>
-  <!-- <p>{Math.floor(task.totalTime / 10)} seconds</p> -->
 </div>
 
 <style lang="scss">

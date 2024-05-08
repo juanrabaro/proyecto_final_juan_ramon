@@ -1,36 +1,30 @@
 <script>
-  import { goto } from '$app/navigation';
-  import { addTask } from '$lib/api/task.js'
+  import { goto } from "$app/navigation";
+  import { addTask } from "$lib/api/task.js";
 
-  export let data
+  export let data;
 
+  let loading = false;
   let formData = {
-    title: '',
-    description: ''
-  }
-
-  function handleInput(e) {
-    formData = {
-      ...formData,
-      [e.target.name]: e.target.value
-    }
-  }
+    title: "",
+    description: "",
+  };
 
   async function handleSubmit(e) {
+    loading = true;
     e.preventDefault();
     try {
-
-      const res = await addTask(formData, data.token)
+      const res = await addTask(formData, data.token);
       console.log(res);
 
       formData = {
-        title: '',
-        description: ''
-      }
+        title: "",
+        description: "",
+      };
 
-      goto('/')
+      goto("/");
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   }
 </script>
@@ -38,15 +32,31 @@
 <main>
   <h1>Add task</h1>
 
-  <form>
-    <label for="title">Title</label>
-    <input type="title" id="title" name="title" required on:input={handleInput} bind:value={formData.title} />
-    
-    <label for="description">Description</label>
-    <input type="description" id="description" name="description" required on:input={handleInput} bind:value={formData.description} />
-    
-    <button on:click={handleSubmit}>Add Task</button>
-  </form>
+  {#if loading}
+    <div class="lds-dual-ring"></div>
+  {:else}
+    <form>
+      <label for="title">Title</label>
+      <input
+        type="title"
+        id="title"
+        name="title"
+        required
+        bind:value={formData.title}
+      />
+
+      <label for="description">Description</label>
+      <input
+        type="description"
+        id="description"
+        name="description"
+        required
+        bind:value={formData.description}
+      />
+
+      <button on:click={handleSubmit}>Add Task</button>
+    </form>
+  {/if}
 </main>
 
 <style lang="scss">
@@ -58,6 +68,35 @@
 
     h1 {
       padding-bottom: 20px;
+    }
+
+    .lds-dual-ring,
+    .lds-dual-ring:after {
+      box-sizing: border-box;
+    }
+    .lds-dual-ring {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-dual-ring:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 6.4px solid currentColor;
+      border-color: currentColor transparent currentColor transparent;
+      animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     form {

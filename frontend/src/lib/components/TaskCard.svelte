@@ -1,0 +1,57 @@
+<script>
+
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  export let task
+
+  function handleDelete() {
+    dispatch("delete", task._id);
+  }
+
+  function handleUpdate() {
+    dispatch("update", task._id);
+  }
+</script>
+
+<ul>
+  <h1>hhhhh</h1>
+  <li class:done={task.done}>{task.title}</li>
+  <li class:done={task.done}>{task.description}</li>
+  <!-- on:click={handleDone} -->
+  <input
+    id={task._id}
+    type="checkbox"
+    checked={task.done}
+  />
+  <button id={task._id} on:click={handleDelete}>Delete Task</button>
+  <button id={task._id} on:click={handleUpdate}>Update Task</button>
+</ul>
+
+<style lang="scss">
+  ul {
+      background-color: rgb(20, 20, 20);
+      padding: 10px;
+      width: 20%;
+      text-align: center;
+      list-style: none;
+
+      .done {
+        text-decoration: line-through;
+      }
+
+      button {
+        background-color: rgb(77, 18, 18);
+        color: rgb(217, 217, 217);
+        border: none;
+        padding: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: rgb(122, 28, 28);
+      }
+    }
+</style>

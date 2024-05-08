@@ -70,7 +70,7 @@
       bind:value={task.description}
     />
 
-    <button on:click={handleUpdate}>Login</button>
+    <button on:click={handleUpdate}>Update task</button>
   </form>
 </main>
 

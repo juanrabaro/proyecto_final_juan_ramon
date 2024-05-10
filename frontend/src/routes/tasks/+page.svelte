@@ -1,33 +1,28 @@
 <script>
   import { goto } from "$app/navigation";
   import { deleteTask, updateTask } from "$lib/api/task.js";
+  import TaskCard from "$lib/components/TaskCard.svelte";
 
   export let data;
 
   let tasks = data.tasks;
 
-  async function handleDelete(e) {
-    const taskId = e.target.id;
+  async function handleDelete(data) {
+    const taskId = data.detail;
 
     try {
       const res = await deleteTask(taskId, data.token);
       console.log(res);
 
-      tasks = tasks.filter((task) => {
-        return task._id !== taskId;
-      });
+      tasks = tasks.filter((task) => task._id !== taskId);
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function handleUpdate(e) {
-    goto(`/update-task/${e.target.id}`);
-  }
-
-  async function handleDone(e) {
+  async function handleDone(data) {
     const taskFound = tasks.find((task) => {
-      return task._id === e.target.id;
+      return task._id === data.detail;
     });
     taskFound.done = !taskFound.done;
 
@@ -41,7 +36,7 @@
     try {
       const res = await updateTask(taskFound, data.token);
       console.log(res);
-      goto("/");
+      // goto("/");
     } catch (error) {
       console.error(error);
     }
@@ -54,19 +49,8 @@
   {#if !tasks.length}
     <p>No tasks</p>
   {:else}
-    {#each tasks as task}
-      <ul>
-        <li class:done={task.done}>{task.title}</li>
-        <li class:done={task.done}>{task.description}</li>
-        <input
-          id={task._id}
-          on:click={handleDone}
-          type="checkbox"
-          checked={task.done}
-        />
-        <button id={task._id} on:click={handleDelete}>Delete Task</button>
-        <button id={task._id} on:click={handleUpdate}>Update Task</button>
-      </ul>
+    {#each tasks as task (task._id)}
+      <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
     {/each}
   {/if}
 </main>
@@ -91,31 +75,6 @@
       cursor: pointer;
       background-color: #740808;
       border: 1px solid #df7171;
-    }
-
-    ul {
-      background-color: rgb(20, 20, 20);
-      padding: 10px;
-      width: 20%;
-      text-align: center;
-      list-style: none;
-
-      .done {
-        text-decoration: line-through;
-      }
-
-      button {
-        background-color: rgb(77, 18, 18);
-        color: rgb(217, 217, 217);
-        border: none;
-        padding: 5px;
-        margin-top: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-      button:hover {
-        background-color: rgb(122, 28, 28);
-      }
     }
   }
 </style>

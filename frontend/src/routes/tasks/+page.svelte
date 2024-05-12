@@ -5,7 +5,15 @@
 
   export let data;
 
-  let tasks = data.tasks;
+  let tasks = orderTasks(data.tasks);
+
+  function orderTasks(tasks) {
+    const doneTasks = tasks.filter((task) => task.done);
+    const notDoneTasks = tasks.filter((task) => !task.done);
+
+    const orderedTasks = [...notDoneTasks, ...doneTasks];
+    return orderedTasks;
+  }
 
   async function handleDelete(data) {
     const taskId = data.detail;
@@ -15,6 +23,7 @@
       console.log(res);
 
       tasks = tasks.filter((task) => task._id !== taskId);
+      tasks = orderTasks(tasks);
     } catch (error) {
       console.error(error);
     }
@@ -36,6 +45,7 @@
     try {
       const res = await updateTask(taskFound, data.token);
       console.log(res);
+      tasks = orderTasks(tasks);
       // goto("/");
     } catch (error) {
       console.error(error);

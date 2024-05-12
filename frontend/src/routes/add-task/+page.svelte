@@ -37,7 +37,9 @@
   {:else}
     <form>
       <label for="title">Title</label>
+      <!-- svelte-ignore a11y-autofocus -->
       <input
+        autofocus
         type="title"
         id="title"
         name="title"

@@ -6,6 +6,9 @@
   export let data;
 
   let tasks = orderTasks(data.tasks);
+  let filter = "all";
+  let doneTasks = tasks.filter((task) => task.done);
+  let notDoneTasks = tasks.filter((task) => !task.done);
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -23,6 +26,8 @@
       console.log(res);
 
       tasks = tasks.filter((task) => task._id !== taskId);
+      doneTasks = doneTasks.filter((task) => task._id !== taskId);
+      notDoneTasks = notDoneTasks.filter((task) => task._id !== taskId);
       tasks = orderTasks(tasks);
     } catch (error) {
       console.error(error);
@@ -45,6 +50,8 @@
     try {
       const res = await updateTask(taskFound, data.token);
       console.log(res);
+      doneTasks = tasks.filter((task) => task.done);
+      notDoneTasks = tasks.filter((task) => !task.done);
       tasks = orderTasks(tasks);
       // goto("/");
     } catch (error) {
@@ -56,8 +63,27 @@
 <main>
   <h1>TASKS</h1>
   <button on:click={() => goto("/add-task")}>Add Task</button>
+  <select bind:value={filter}>
+    <option value="all" default>All</option>
+    <option value="done">Done</option>
+    <option value="not-done">Not Done</option>
+  </select>
   {#if !tasks.length}
     <p>No tasks</p>
+  {:else if filter === "not-done"}
+    {#if !notDoneTasks.length}
+      <p>No not done tasks</p>
+    {/if}
+    {#each notDoneTasks as task (task._id)}
+      <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
+    {/each}
+  {:else if filter === "done"}
+    {#if !doneTasks.length}
+      <p>No done tasks</p>
+    {/if}
+    {#each doneTasks as task (task._id)}
+      <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
+    {/each}
   {:else}
     {#each tasks as task (task._id)}
       <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />

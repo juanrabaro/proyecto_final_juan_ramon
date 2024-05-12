@@ -7,9 +7,9 @@
 
   let tasks = orderTasks(data.tasks);
   let filter = "all";
+  let filterName = "";
   let doneTasks = tasks.filter((task) => task.done);
   let notDoneTasks = tasks.filter((task) => !task.done);
-  let tasksDone = tasks.filter((task) => task.done);
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -30,7 +30,6 @@
       doneTasks = doneTasks.filter((task) => task._id !== taskId);
       notDoneTasks = notDoneTasks.filter((task) => task._id !== taskId);
       tasks = orderTasks(tasks);
-      tasksDone = tasks.filter((task) => task.done);
     } catch (error) {
       console.error(error);
     }
@@ -55,9 +54,35 @@
       doneTasks = tasks.filter((task) => task.done);
       notDoneTasks = tasks.filter((task) => !task.done);
       tasks = orderTasks(tasks);
-      tasksDone = tasks.filter((task) => task.done);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  let doneTaskShowed = doneTasks
+  let notDoneTaskShowed = notDoneTasks
+  function handleFilterName() {
+
+    if (filter === "all") {
+      if (filterName === "") {
+        tasks = orderTasks(data.tasks);
+      } else {
+        const tasksOrdered = orderTasks(data.tasks);
+        tasks = tasksOrdered.filter((task) =>
+          task.title.toLowerCase().includes(filterName.toLowerCase()),
+        );
+      }
+    } else if (filter === "done") {
+      doneTaskShowed = doneTasks.filter((task) =>
+        task.title.toLowerCase().includes(filterName.toLowerCase()),
+      );
+      console.log(filterName);
+      console.log(tasks);
+      console.log(doneTasks);
+    } else if (filter === "not-done") {
+      notDoneTasks = notDoneTasks.filter((task) =>
+        task.title.toLowerCase().includes(filterName.toLowerCase()),
+      );
     }
   }
 </script>
@@ -66,13 +91,19 @@
   <h1>TASKS</h1>
   <button on:click={() => goto("/add-task")}>Add Task</button>
   {#if tasks.length}
-    <p>Tasks done: {tasksDone.length}/{tasks.length}</p>
+    <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
   {/if}
   <select bind:value={filter}>
     <option value="all" default>All</option>
     <option value="done">Done</option>
     <option value="not-done">Not Done</option>
   </select>
+  <input
+    type="text"
+    placeholder="Filter by title"
+    bind:value={filterName}
+    on:input={handleFilterName}
+  />
   {#if !tasks.length}
     <p>No tasks</p>
   {:else if filter === "not-done"}
@@ -86,7 +117,7 @@
     {#if !doneTasks.length}
       <p>No done tasks</p>
     {/if}
-    {#each doneTasks as task (task._id)}
+    {#each doneTaskShowed as task (task._id)}
       <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
     {/each}
   {:else}

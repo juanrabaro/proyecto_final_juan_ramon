@@ -9,6 +9,7 @@
   let filter = "all";
   let doneTasks = tasks.filter((task) => task.done);
   let notDoneTasks = tasks.filter((task) => !task.done);
+  let tasksDone = tasks.filter((task) => task.done);
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -29,6 +30,7 @@
       doneTasks = doneTasks.filter((task) => task._id !== taskId);
       notDoneTasks = notDoneTasks.filter((task) => task._id !== taskId);
       tasks = orderTasks(tasks);
+      tasksDone = tasks.filter((task) => task.done);
     } catch (error) {
       console.error(error);
     }
@@ -53,7 +55,7 @@
       doneTasks = tasks.filter((task) => task.done);
       notDoneTasks = tasks.filter((task) => !task.done);
       tasks = orderTasks(tasks);
-      // goto("/");
+      tasksDone = tasks.filter((task) => task.done);
     } catch (error) {
       console.error(error);
     }
@@ -63,6 +65,9 @@
 <main>
   <h1>TASKS</h1>
   <button on:click={() => goto("/add-task")}>Add Task</button>
+  {#if tasks.length}
+    <p>Tasks done: {tasksDone.length}/{tasks.length}</p>
+  {/if}
   <select bind:value={filter}>
     <option value="all" default>All</option>
     <option value="done">Done</option>

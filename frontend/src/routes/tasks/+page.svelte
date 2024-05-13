@@ -10,6 +10,7 @@
   let doneTasks = tasks.filter((task) => task.done);
   let notDoneTasks = tasks.filter((task) => !task.done);
   let filter = "all";
+  let filterName = "";
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -61,7 +62,6 @@
       notDoneTasks = tasks.filter((task) => !task.done);
 
       handleFilter();
-
     } catch (error) {
       console.error(error);
     }
@@ -77,6 +77,21 @@
     }
   }
 
+  function handleFilterName() {
+    if (filter === "all") {
+      showedTasks = tasks.filter((task) => {
+        return task.title.toLowerCase().includes(filterName.toLowerCase());
+      });
+    } else if (filter === "done") {
+      showedTasks = doneTasks.filter((task) => {
+        return task.title.toLowerCase().includes(filterName.toLowerCase());
+      });
+    } else if (filter === "not-done") {
+      showedTasks = notDoneTasks.filter((task) => {
+        return task.title.toLowerCase().includes(filterName.toLowerCase());
+      });
+    }
+  }
 </script>
 
 <main>
@@ -90,8 +105,16 @@
     <option value="done">Done</option>
     <option value="not-done">Not Done</option>
   </select>
-  {#if !showedTasks.length}
+  <input
+    type="text"
+    placeholder="Filter by title"
+    bind:value={filterName}
+    on:input={handleFilterName}
+  />
+  {#if !tasks.length}
     <p>No tasks</p>
+  {:else if tasks.length && !showedTasks.length}
+    <p>No tasks match with the filter</p>
   {:else}
     {#each showedTasks as task (task._id)}
       <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />

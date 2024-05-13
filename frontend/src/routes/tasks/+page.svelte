@@ -6,8 +6,10 @@
   export let data;
 
   let tasks = data.tasks;
-  let showedTasks = orderTasks(data.tasks);
-
+  let showedTasks = orderTasks(tasks);
+  let doneTasks = tasks.filter((task) => task.done);
+  let notDoneTasks = tasks.filter((task) => !task.done);
+  let filter = "all";
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -23,17 +25,26 @@
     try {
       const res = await deleteTask(taskId, data.token);
       console.log(res);
+
+      tasks = tasks.filter((task) => task._id !== taskId);
+      showedTasks = showedTasks.filter((task) => task._id !== taskId);
     } catch (error) {
       console.error(error);
     }
   }
 
   async function handleDone(data) {
-    const taskFound = tasks.find((task) => {
+    const taskFound = showedTasks.find((task) => {
       return task._id === data.detail;
     });
     taskFound.done = !taskFound.done;
 
+    showedTasks = showedTasks.map((task) => {
+      if (task._id === taskFound._id) {
+        return { ...task, done: taskFound.done };
+      }
+      return task;
+    });
     tasks = tasks.map((task) => {
       if (task._id === taskFound._id) {
         return { ...task, done: taskFound.done };
@@ -44,8 +55,25 @@
     try {
       const res = await updateTask(taskFound, data.token);
       console.log(res);
+
+      showedTasks = orderTasks(showedTasks);
+      doneTasks = tasks.filter((task) => task.done);
+      notDoneTasks = tasks.filter((task) => !task.done);
+
+      handleFilter();
+
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  function handleFilter() {
+    if (filter === "all") {
+      showedTasks = orderTasks(tasks);
+    } else if (filter === "done") {
+      showedTasks = doneTasks;
+    } else if (filter === "not-done") {
+      showedTasks = notDoneTasks;
     }
   }
 
@@ -54,7 +82,15 @@
 <main>
   <h1>TASKS</h1>
   <button on:click={() => goto("/add-task")}>Add Task</button>
-  {#if !tasks.length}
+  {#if tasks.length}
+    <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
+  {/if}
+  <select bind:value={filter} on:change={handleFilter}>
+    <option value="all" default>All</option>
+    <option value="done">Done</option>
+    <option value="not-done">Not Done</option>
+  </select>
+  {#if !showedTasks.length}
     <p>No tasks</p>
   {:else}
     {#each showedTasks as task (task._id)}

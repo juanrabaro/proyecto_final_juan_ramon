@@ -82,6 +82,9 @@
     {:else}
       <section class="timer-task-container">
         <h2>Timer tasks</h2>
+        {#if !timerTasks.length}
+          <p>No timer tasks</p>
+        {/if}
         {#each timerTasks as timerTask (timerTask._id)}
           <TimerTask
             on:deleteTimerTask={handleDeleteTimerTask}
@@ -95,6 +98,9 @@
       </section>
       <section class="crono-task-container">
         <h2>Crono tasks</h2>
+        {#if !cronoTasks.length}
+          <p>No crono tasks</p>
+        {/if}
         {#each cronoTasks as cronoTask (cronoTask._id)}
           <CronoTask
             on:deleteCronoTask={handleDeleteCronoTask}
@@ -135,27 +141,14 @@
     .task-container {
       display: flex;
       gap: 20px;
+    }
 
-      // div {
-      //   background-color: rgb(20, 20, 20);
-      //   padding: 10px;
-      //   width: 100%;
-      //   text-align: center;
-      //   list-style: none;
+    .crono-task-container {
+      border: 2px solid white;
+    }
 
-      //   button {
-      //     background-color: rgb(77, 18, 18);
-      //     color: rgb(217, 217, 217);
-      //     border: none;
-      //     padding: 5px;
-      //     margin-top: 10px;
-      //     cursor: pointer;
-      //     border-radius: 5px;
-      //   }
-      //   button:hover {
-      //     background-color: rgb(122, 28, 28);
-      //   }
-      // }
+    .timer-task-container {
+      border: 2px solid white;
     }
   }
 </style>

@@ -22,12 +22,6 @@
   let titleTimeTask = "";
   let maxTimeTimerTask = 30;
 
-  timerTasks = timerTasks.map((item) => {
-    const newItem = { ...item, id: item._id };
-    delete newItem._id;
-    return newItem;
-  });
-
   async function createTimeTask() {
     if (!titleTimeTask.length) return;
 
@@ -35,6 +29,8 @@
       try {
         const res = await addCronoTask({ title: titleTimeTask });
         console.log(res);
+        res.data.id = res.data._id;
+        delete res.data._id;
         cronoTasks = [...cronoTasks, res.data];
         titleTimeTask = "";
       } catch (error) {
@@ -46,7 +42,7 @@
           title: titleTimeTask,
           maxTime: maxTimeTimerTask,
         });
-        console.log(res.data);
+        console.log(res);
         res.data.id = res.data._id;
         delete res.data._id;
         timerTasks = [...timerTasks, res.data];
@@ -60,7 +56,7 @@
 
   function handleDeleteCronoTask(event) {
     const taskId = event.detail;
-    cronoTasks = cronoTasks.filter((task) => task._id !== taskId);
+    cronoTasks = cronoTasks.filter((task) => task.id !== taskId);
     console.log(cronoTasks);
   }
 
@@ -70,13 +66,18 @@
     timerTasks = newTimerTasks;
   }
 
+  function timerOrCronoTaskFound(eId) {
+    const timerTaskFound = timerTasks.find((task) => {
+      return task.id === eId;
+    });
+    return timerTaskFound ? "timer" : "crono";
+  }
+
   function handleDndConsider(e) {
-    console.log(e.detail.items);
-    timerTasks = e.detail.items;
+    timerOrCronoTaskFound() === "timer" ? (timerTasks = e.detail.items) : (cronoTasks = e.detail.items)
   }
   function handleDndFinalize(e) {
-    console.log(e.detail.items);
-    timerTasks = e.detail.items;
+    timerOrCronoTaskFound() === "timer" ? (timerTasks = e.detail.items) : (cronoTasks = e.detail.items)
   }
 </script>
 
@@ -124,21 +125,32 @@
           {/each}
         </section>
       </section>
-      <section class="crono-task-container">
-        <h2>Crono tasks</h2>
-        {#if !cronoTasks.length}
-          <p>No crono tasks</p>
-        {/if}
-        {#each cronoTasks as cronoTask (cronoTask._id)}
-          <CronoTask
-            on:deleteCronoTask={handleDeleteCronoTask}
-            {titleEditMode}
-            {idTaskToUpdate}
-            {inputValueToUpdate}
-            {cronoTasks}
-            {cronoTask}
-          />
-        {/each}
+      <section>
+        <div>
+          <h2>Crono tasks</h2>
+          {#if !cronoTasks.length}
+            <p>No crono tasks</p>
+          {/if}
+        </div>
+        <section
+          class="crono-task-container"
+          use:dndzone={{ items: cronoTasks, flipDurationMs }}
+          on:consider={handleDndConsider}
+          on:finalize={handleDndFinalize}
+        >
+          {#each cronoTasks as cronoTask (cronoTask.id)}
+            <div animate:flip={{ duration: flipDurationMs }}>
+              <CronoTask
+                on:deleteCronoTask={handleDeleteCronoTask}
+                {titleEditMode}
+                {idTaskToUpdate}
+                {inputValueToUpdate}
+                {cronoTasks}
+                {cronoTask}
+              />
+            </div>
+          {/each}
+        </section>
       </section>
     {/if}
   </section>

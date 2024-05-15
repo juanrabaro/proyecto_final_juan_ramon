@@ -72,7 +72,7 @@
     if (botonClickado === "run") {
       try {
         const res = await updateCronoTask({
-          _id: cronoTask._id,
+          id: cronoTask.id,
           running: "run",
         });
         // console.log(res);
@@ -102,7 +102,7 @@
     } else if (botonClickado === "pause") {
       try {
         const res = await updateCronoTask({
-          _id: cronoTask._id,
+          id: cronoTask.id,
           running: "pause",
           showedCronoForPause: showedCrono,
         });
@@ -119,7 +119,7 @@
     } else {
       try {
         const res = await updateCronoTask({
-          _id: cronoTask._id,
+          id: cronoTask.id,
           running: "stop",
         });
         // console.log(res);
@@ -168,7 +168,7 @@
 
     console.log("crono");
     const cronoTaskFound = cronoTasks.find((task) => {
-      return task._id === taskId;
+      return task.id === taskId;
     });
 
     cronoTaskFound.title = inputValueToUpdate;
@@ -183,17 +183,17 @@
 </script>
 
 <div class="card">
-  {#if titleEditMode && idTaskToUpdate === cronoTask._id}
+  {#if titleEditMode && idTaskToUpdate === cronoTask.id}
     <!-- svelte-ignore a11y-autofocus -->
     <input
-      id={cronoTask._id}
+      id={cronoTask.id}
       autofocus
       on:blur={blurOrEnterKey}
       on:keydown={blurOrEnterKey}
       value={cronoTask.title}
     />
   {:else}
-    <p id={cronoTask._id} on:dblclick={handleTransformInput}>
+    <p id={cronoTask.id} on:dblclick={handleTransformInput}>
       {cronoTask.title} ✏️
     </p>
   {/if}
@@ -222,7 +222,7 @@
   </div>
   <button
     class="delete-button"
-    id={cronoTask._id}
+    id={cronoTask.id}
     on:click={handleDeleteTimeTask}>Delete timerTask</button
   >
 </div>

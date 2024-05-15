@@ -4,6 +4,14 @@ import { getTimerTasks } from '$lib/api/timerTask.js';
 import { getCronoTasks } from '$lib/api/cronoTask.js';
 import { extractToken } from '$lib/api/extractToken';
 
+function replaceId(array: Array<any>) {
+  return array.map((item) => {
+    const newItem = { ...item, id: item._id };
+    delete newItem._id;
+    return newItem;
+  });
+}
+
 export const load = async ({ request }: any) => {
   const token = request.headers.get('cookie')
   
@@ -14,12 +22,15 @@ export const load = async ({ request }: any) => {
 
       await verifyToken({token: tokenFormated});
 
-      const resTimerTasks = await getTimerTasks(tokenFormated);
-      const resCronoTasks = await getCronoTasks(tokenFormated);
+      let resTimerTasks = await getTimerTasks(tokenFormated);
+      let resCronoTasks = await getCronoTasks(tokenFormated);
+
+      resTimerTasks = replaceId(resTimerTasks.data);
+      resCronoTasks = replaceId(resCronoTasks.data);
 
       return {
-        timerTasks: resTimerTasks.data,
-        cronoTasks: resCronoTasks.data,
+        timerTasks: resTimerTasks,
+        cronoTasks: resCronoTasks,
         token: tokenFormated
       }
     } catch (error) {

@@ -18,7 +18,7 @@ export const addCronoTask = (task, token) => myAxios.post('/add-crono-task', tas
   }
 })
 
-export const updateCronoTask = (task, token) => myAxios.put(`/update-crono-task/${task._id}`, task, {
+export const updateCronoTask = (task, token) => myAxios.put(`/update-crono-task/${task.id}`, task, {
   headers: {
     Authorization: token
   }

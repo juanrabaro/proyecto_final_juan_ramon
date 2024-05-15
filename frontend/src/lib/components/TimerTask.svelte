@@ -91,7 +91,7 @@
     if (botonClickado === "run") {
       try {
         const res = await updateTimerTask({
-          _id: timerTask._id,
+          id: timerTask.id,
           running: "run",
         });
         console.log(res);
@@ -132,7 +132,7 @@
     } else if (botonClickado === "pause") {
       try {
         const res = await updateTimerTask({
-          _id: timerTask._id,
+          id: timerTask.id,
           running: "pause",
           showedTimerForPause: showedCrono,
         });
@@ -148,7 +148,7 @@
     } else {
       try {
         const res = await updateTimerTask({
-          _id: timerTask._id,
+          id: timerTask.id,
           running: "stop",
         });
         console.log(res);
@@ -169,7 +169,7 @@
   async function pararTimer() {
     try {
       await updateTimerTask({
-        _id: timerTask._id,
+        id: timerTask.id,
         running: "stop",
       });
     } catch (error) {
@@ -208,7 +208,7 @@
     const taskId = e.target.id;
 
     const taskFound = timerTasks.find((task) => {
-      return task._id === taskId;
+      return task.id === taskId;
     });
 
     taskFound.title = inputValueToUpdate;
@@ -223,17 +223,17 @@
 </script>
 
 <div class="card">
-  {#if titleEditMode && idTaskToUpdate === timerTask._id}
+  {#if titleEditMode && idTaskToUpdate === timerTask.id}
     <!-- svelte-ignore a11y-autofocus -->
     <input
-      id={timerTask._id}
+      id={timerTask.id}
       autofocus
       on:blur={blurOrEnterKey}
       on:keydown={blurOrEnterKey}
       value={timerTask.title}
     />
   {:else}
-    <p id={timerTask._id} on:dblclick={handleTransformInput}>
+    <p id={timerTask.id} on:dblclick={handleTransformInput}>
       {timerTask.title} ✏️
     </p>
   {/if}
@@ -263,7 +263,7 @@
   </div>
   <button
     class="delete-button"
-    id={timerTask._id}
+    id={timerTask.id}
     on:click={handleDeleteTimeTask}>Delete timerTask</button
   >
 </div>

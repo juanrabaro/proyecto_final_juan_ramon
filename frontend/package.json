@@ -24,6 +24,7 @@
 		"easytimer.js": "^4.6.0",
 		"js-cookie": "^3.0.5",
 		"sass": "^1.72.0",
+		"svelte-dnd-action": "^0.9.45",
 		"svelte-preprocess": "^5.1.3"
 	}
 }

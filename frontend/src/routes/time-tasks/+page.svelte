@@ -1,4 +1,6 @@
 <script>
+  import { dndzone } from "svelte-dnd-action";
+  import { flip } from "svelte/animate";
   import { addTimerTask } from "$lib/api/timerTask.js";
   import { addCronoTask } from "$lib/api/cronoTask.js";
   import CronoTask from "$lib/components/CronoTask.svelte";
@@ -7,6 +9,7 @@
   export let data;
 
   // console.log(data.cronoTasks);
+  const flipDurationMs = 300;
 
   let titleEditMode = false;
   let idTaskToUpdate = "";
@@ -19,6 +22,11 @@
   let titleTimeTask = "";
   let maxTimeTimerTask = 30;
 
+  timerTasks = timerTasks.map((item) => {
+    const newItem = { ...item, id: item._id };
+    delete newItem._id;
+    return newItem;
+  });
 
   async function createTimeTask() {
     if (!titleTimeTask.length) return;
@@ -38,7 +46,9 @@
           title: titleTimeTask,
           maxTime: maxTimeTimerTask,
         });
-        console.log(res);
+        console.log(res.data);
+        res.data.id = res.data._id;
+        delete res.data._id;
         timerTasks = [...timerTasks, res.data];
         titleTimeTask = "";
         maxTimeTimerTask = 30;
@@ -55,11 +65,18 @@
   }
 
   function handleDeleteTimerTask(event) {
-    const newTimerTasks = timerTasks.filter(
-      (task) => task._id !== event.detail,
-    );
+    const newTimerTasks = timerTasks.filter((task) => task.id !== event.detail);
     timerTasks = [];
     timerTasks = newTimerTasks;
+  }
+
+  function handleDndConsider(e) {
+    console.log(e.detail.items);
+    timerTasks = e.detail.items;
+  }
+  function handleDndFinalize(e) {
+    console.log(e.detail.items);
+    timerTasks = e.detail.items;
   }
 </script>
 
@@ -80,21 +97,32 @@
     {#if !timerTasks.length && !cronoTasks.length}
       <p>No time tasks</p>
     {:else}
-      <section class="timer-task-container">
-        <h2>Timer tasks</h2>
-        {#if !timerTasks.length}
-          <p>No timer tasks</p>
-        {/if}
-        {#each timerTasks as timerTask (timerTask._id)}
-          <TimerTask
-            on:deleteTimerTask={handleDeleteTimerTask}
-            {titleEditMode}
-            {idTaskToUpdate}
-            {inputValueToUpdate}
-            {timerTasks}
-            {timerTask}
-          />
-        {/each}
+      <section>
+        <div>
+          <h2>Timer tasks</h2>
+          {#if !timerTasks.length}
+            <p>No timer tasks</p>
+          {/if}
+        </div>
+        <section
+          class="timer-task-container"
+          use:dndzone={{ items: timerTasks, flipDurationMs }}
+          on:consider={handleDndConsider}
+          on:finalize={handleDndFinalize}
+        >
+          {#each timerTasks as timerTask (timerTask.id)}
+            <div animate:flip={{ duration: flipDurationMs }}>
+              <TimerTask
+                on:deleteTimerTask={handleDeleteTimerTask}
+                {titleEditMode}
+                {idTaskToUpdate}
+                {inputValueToUpdate}
+                {timerTasks}
+                {timerTask}
+              />
+            </div>
+          {/each}
+        </section>
       </section>
       <section class="crono-task-container">
         <h2>Crono tasks</h2>
@@ -145,10 +173,12 @@
 
     .crono-task-container {
       border: 2px solid white;
+      overflow: scroll;
     }
 
     .timer-task-container {
       border: 2px solid white;
+      overflow: scroll;
     }
   }
 </style>

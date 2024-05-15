@@ -18,7 +18,7 @@ export const addTimerTask = (task, token) => myAxios.post('/add-timer-task', tas
   }
 })
 
-export const updateTimerTask = (task, token) => myAxios.put(`/update-timer-task/${task._id}`, task, {
+export const updateTimerTask = (task, token) => myAxios.put(`/update-timer-task/${task.id}`, task, {
   headers: {
     Authorization: token
   }

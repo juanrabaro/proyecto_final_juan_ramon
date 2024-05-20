@@ -118,7 +118,7 @@
         </div>
         <section
           class="timer-task-container"
-          use:dndzone={{ items: timerTasks, flipDurationMs }}
+          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer"}}
           on:consider={handleDndConsiderTimer}
           on:finalize={handleDndFinalizeTimer}
         >
@@ -145,7 +145,7 @@
         </div>
         <section
           class="crono-task-container"
-          use:dndzone={{ items: cronoTasks, flipDurationMs }}
+          use:dndzone={{ items: cronoTasks, flipDurationMs, type: "crono"}}
           on:consider={handleDndConsiderCrono}
           on:finalize={handleDndFinalizeCrono}
         >

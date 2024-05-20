@@ -5,14 +5,14 @@
   import { addCronoTask } from "$lib/api/cronoTask.js";
   import CronoTask from "$lib/components/CronoTask.svelte";
   import TimerTask from "$lib/components/TimerTask.svelte";
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
+  import { dndMoving, moving, notMoving } from "$lib/stores/dndStore.js";
 
   export let data;
 
   // console.log(data.cronoTasks);
   const flipDurationMs = 300;
+  // let dndMoving = false;
+  let idDndMoving = "";
 
   let titleEditMode = false;
   let idTaskToUpdate = "";
@@ -69,41 +69,26 @@
     timerTasks = newTimerTasks;
   }
 
-  let timerTaskBackup = {};
   function handleDndConsiderTimer(e) {
-    console.log(e.detail.info.id);
-    const timerTaskFound = timerTasks.find(
-      (task) => task.id === e.detail.info.id,
-    );
-    console.log(timerTaskFound);
-    timerTasks = {...e.detail.items, title: "nose"};
-    // if (timerTaskFound) {
-    //   timerTasks = timerTasks.map((task) => {
-    //     if (task.id === timerTaskFound.id) {
-    //       timerTaskBackup = task
-    //       return { ...task, title: "nose" };
-    //     }
-    //     return task;
-    //   });
-    // }
+    // console.log("handleDndConsiderTimer");
+    moving();
+    timerTasks = e.detail.items;
+    idDndMoving = e.detail.info.id;
+    // dndMoving = true;
   }
   function handleDndFinalizeTimer(e) {
-    console.log(e.detail.info.id);
-    const timerTaskFound = timerTasks.find(
-      (task) => task.id === e.detail.info.id,
-    );
-    console.log(timerTaskFound);
+    // console.log("handleDndFinalizeTimer");
+    notMoving();
+    console.log($dndMoving);
     timerTasks = e.detail.items;
-    // if (timerTaskFound) {
-    //   timerTasks = timerTasks.map((task) => {
-    //     if (task.id === timerTaskFound.id) {
-    //       return { ...task, title: timerTaskBackup.title };
-    //     }
-    //     return task;
-    //   });
-    //   timerTaskBackup = {};
-    // }
+    // dndMoving = false;
+    idDndMoving = "";
   }
+  function transformDraggedElement(draggedEl, data, index) {
+    // console.log("transformDraggedElement");
+		const msg = `Moving...`;
+		draggedEl.innerHTML = msg;
+	}
   function handleDndConsiderCrono(e) {
     cronoTasks = e.detail.items;
   }
@@ -138,7 +123,7 @@
         </div>
         <section
           class="timer-task-container"
-          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer" }}
+          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer", transformDraggedElement }}
           on:consider={handleDndConsiderTimer}
           on:finalize={handleDndFinalizeTimer}
         >
@@ -151,7 +136,9 @@
                 {inputValueToUpdate}
                 {timerTasks}
                 {timerTask}
-              />
+                />
+                <!-- {dndMoving} -->
+                <!-- {...(timerTask.id === idDndMoving ? { dndMoving } : { dndMoving: false })} -->
             </div>
           {/each}
         </section>

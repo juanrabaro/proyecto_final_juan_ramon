@@ -1,10 +1,11 @@
 <script>
   import { Timer } from "easytimer.js";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import RunImg from "$lib/assets/run.png";
   import PauseImg from "$lib/assets/pause.png";
   import StopImg from "$lib/assets/stop.png";
   import { deleteTimerTask, updateTimerTask } from "$lib/api/timerTask.js";
+  import { dndMoving } from "$lib/stores/dndStore.js";
 
   const dispatch = createEventDispatcher();
 
@@ -13,6 +14,19 @@
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
+  // export let dndMoving;
+
+  
+  dndMoving.subscribe((value) => {
+    console.log(value);
+  });
+  // onMount(() => {
+  //   if ($dndMoving) {
+  //     console.log("moviendose");
+  //   } else {
+  //     console.log("quieto");
+  //   }
+  // });
 
   // console.log(timerTask);
 

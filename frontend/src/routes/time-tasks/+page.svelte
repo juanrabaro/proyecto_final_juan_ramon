@@ -66,18 +66,6 @@
     timerTasks = newTimerTasks;
   }
 
-  // function timerOrCrono(eId) {
-  //   const timerTaskFound = timerTasks.find((task) => {
-  //     return task.id === eId;
-  //   });
-  //   console.log(timerTaskFound);
-  //   if (timerTaskFound) {
-  //     return "timer";
-  //   } else {
-  //     return "crono";
-  //   }
-  // }
-
   function handleDndConsiderTimer(e) {
     timerTasks = e.detail.items;
   }

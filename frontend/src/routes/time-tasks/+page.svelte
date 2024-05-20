@@ -5,6 +5,9 @@
   import { addCronoTask } from "$lib/api/cronoTask.js";
   import CronoTask from "$lib/components/CronoTask.svelte";
   import TimerTask from "$lib/components/TimerTask.svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let data;
 
@@ -66,11 +69,40 @@
     timerTasks = newTimerTasks;
   }
 
+  let timerTaskBackup = {};
   function handleDndConsiderTimer(e) {
-    timerTasks = e.detail.items;
+    console.log(e.detail.info.id);
+    const timerTaskFound = timerTasks.find(
+      (task) => task.id === e.detail.info.id,
+    );
+    console.log(timerTaskFound);
+    timerTasks = {...e.detail.items, title: "nose"};
+    // if (timerTaskFound) {
+    //   timerTasks = timerTasks.map((task) => {
+    //     if (task.id === timerTaskFound.id) {
+    //       timerTaskBackup = task
+    //       return { ...task, title: "nose" };
+    //     }
+    //     return task;
+    //   });
+    // }
   }
   function handleDndFinalizeTimer(e) {
+    console.log(e.detail.info.id);
+    const timerTaskFound = timerTasks.find(
+      (task) => task.id === e.detail.info.id,
+    );
+    console.log(timerTaskFound);
     timerTasks = e.detail.items;
+    // if (timerTaskFound) {
+    //   timerTasks = timerTasks.map((task) => {
+    //     if (task.id === timerTaskFound.id) {
+    //       return { ...task, title: timerTaskBackup.title };
+    //     }
+    //     return task;
+    //   });
+    //   timerTaskBackup = {};
+    // }
   }
   function handleDndConsiderCrono(e) {
     cronoTasks = e.detail.items;
@@ -106,7 +138,7 @@
         </div>
         <section
           class="timer-task-container"
-          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer"}}
+          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer" }}
           on:consider={handleDndConsiderTimer}
           on:finalize={handleDndFinalizeTimer}
         >
@@ -133,7 +165,7 @@
         </div>
         <section
           class="crono-task-container"
-          use:dndzone={{ items: cronoTasks, flipDurationMs, type: "crono"}}
+          use:dndzone={{ items: cronoTasks, flipDurationMs, type: "crono" }}
           on:consider={handleDndConsiderCrono}
           on:finalize={handleDndFinalizeCrono}
         >

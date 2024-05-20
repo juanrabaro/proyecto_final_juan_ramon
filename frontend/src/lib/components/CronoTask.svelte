@@ -6,7 +6,6 @@
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
 
-  
   const dispatch = createEventDispatcher();
   
   export let cronoTasks;

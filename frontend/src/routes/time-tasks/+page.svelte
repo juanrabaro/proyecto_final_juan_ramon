@@ -66,18 +66,29 @@
     timerTasks = newTimerTasks;
   }
 
-  function timerOrCronoTaskFound(eId) {
-    const timerTaskFound = timerTasks.find((task) => {
-      return task.id === eId;
-    });
-    return timerTaskFound ? "timer" : "crono";
-  }
+  // function timerOrCrono(eId) {
+  //   const timerTaskFound = timerTasks.find((task) => {
+  //     return task.id === eId;
+  //   });
+  //   console.log(timerTaskFound);
+  //   if (timerTaskFound) {
+  //     return "timer";
+  //   } else {
+  //     return "crono";
+  //   }
+  // }
 
-  function handleDndConsider(e) {
-    timerOrCronoTaskFound() === "timer" ? (timerTasks = e.detail.items) : (cronoTasks = e.detail.items)
+  function handleDndConsiderTimer(e) {
+    timerTasks = e.detail.items;
   }
-  function handleDndFinalize(e) {
-    timerOrCronoTaskFound() === "timer" ? (timerTasks = e.detail.items) : (cronoTasks = e.detail.items)
+  function handleDndFinalizeTimer(e) {
+    timerTasks = e.detail.items;
+  }
+  function handleDndConsiderCrono(e) {
+    cronoTasks = e.detail.items;
+  }
+  function handleDndFinalizeCrono(e) {
+    cronoTasks = e.detail.items;
   }
 </script>
 
@@ -108,8 +119,8 @@
         <section
           class="timer-task-container"
           use:dndzone={{ items: timerTasks, flipDurationMs }}
-          on:consider={handleDndConsider}
-          on:finalize={handleDndFinalize}
+          on:consider={handleDndConsiderTimer}
+          on:finalize={handleDndFinalizeTimer}
         >
           {#each timerTasks as timerTask (timerTask.id)}
             <div animate:flip={{ duration: flipDurationMs }}>
@@ -135,8 +146,8 @@
         <section
           class="crono-task-container"
           use:dndzone={{ items: cronoTasks, flipDurationMs }}
-          on:consider={handleDndConsider}
-          on:finalize={handleDndFinalize}
+          on:consider={handleDndConsiderCrono}
+          on:finalize={handleDndFinalizeCrono}
         >
           {#each cronoTasks as cronoTask (cronoTask.id)}
             <div animate:flip={{ duration: flipDurationMs }}>

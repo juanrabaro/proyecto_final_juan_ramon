@@ -68,6 +68,8 @@
   }
 
   function handleFilter() {
+    filterName = "";
+    showedTasks = tasks;
     if (filter === "all") {
       showedTasks = orderTasks(tasks);
     } else if (filter === "done") {

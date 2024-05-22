@@ -1,6 +1,6 @@
 <script>
   import { Timer } from "easytimer.js";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import RunImg from "$lib/assets/run.png";
   import PauseImg from "$lib/assets/pause.png";
   import StopImg from "$lib/assets/stop.png";
@@ -14,76 +14,71 @@
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
-  // export let dndMoving;
+  let cardIsMoving;
 
-  
   dndMoving.subscribe((value) => {
-    console.log(value);
+    cardIsMoving = value;
   });
-  // onMount(() => {
-  //   if ($dndMoving) {
-  //     console.log("moviendose");
-  //   } else {
-  //     console.log("quieto");
-  //   }
-  // });
+  // console.log("fuera", cardIsMoving);
+  // if (!cardIsMoving) {
+    // console.log("dentro", cardIsMoving);
+    const timer = new Timer({
+      countdown: true,
+      precision: "secondTenths",
+      target: { secondTenths: 0 },
+    });
+    let cronoState = "stopped";
+    let maximoTiempo = timerTask.maxTime.toString();
 
-  // console.log(timerTask);
+    maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+    let showedCrono = `00:${maximoTiempo}:00:0`;
 
-  const timer = new Timer({
-    countdown: true,
-    precision: "secondTenths",
-    target: { secondTenths: 0 },
-  });
-  let cronoState = "stopped";
-  let maximoTiempo = timerTask.maxTime.toString();
+    if (timerTask.timeStarted && !timerTask.stoppedMoment) {
+      console.log("tiempo corriendo");
+      cronoState = "running";
 
-  maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-  let showedCrono = `00:${maximoTiempo}:00:0`;
+      const tiempoTranscurrido =
+        (new Date() - new Date(timerTask.timeStarted)) / 100;
 
-  if (timerTask.timeStarted && !timerTask.stoppedMoment) {
-    console.log("tiempo corriendo");
-    cronoState = "running";
+      let actualTime =
+        timerTask.maxTime * 60 * 10 -
+        tiempoTranscurrido +
+        timerTask.stoppedTime;
 
-    const tiempoTranscurrido =
-      (new Date() - new Date(timerTask.timeStarted)) / 100;
-
-    let actualTime =
-      timerTask.maxTime * 60 * 10 - tiempoTranscurrido + timerTask.stoppedTime;
-
-    if (actualTime <= 0) {
-      actualTime = 0;
-      cronoState = "stopped";
-      maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-      showedCrono = `00:${maximoTiempo}:00:0`;
-      pararTimer();
-    } else {
-      timer.start({
-        countdown: true,
-        precision: "secondTenths",
-        startValues: { secondTenths: actualTime },
-      });
-      timer.addEventListener("secondTenthsUpdated", function () {
-        showedCrono = getTime();
-      });
-      timer.addEventListener("targetAchieved", function (e) {
-        console.log("Time has run out!");
-        if (typeof window !== "undefined") {
-          alert(`The timer ${timerTask.title} has finished!`);
-        }
+      if (actualTime <= 0) {
+        actualTime = 0;
         cronoState = "stopped";
         maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
         showedCrono = `00:${maximoTiempo}:00:0`;
         pararTimer();
-        timer.removeAllEventListeners();
-      });
-    }
-  } else if (timerTask.stoppedMoment) {
-    console.log("tiempo parado");
+      } else {
+        timer.start({
+          countdown: true,
+          precision: "secondTenths",
+          startValues: { secondTenths: actualTime },
+        });
+        timer.addEventListener("secondTenthsUpdated", function () {
+          showedCrono = getTime();
+        });
+        timer.addEventListener("targetAchieved", function (e) {
+          console.log("Time has run out!");
+          if (typeof window !== "undefined") {
+            alert(`The timer ${timerTask.title} has finished!`);
+          }
+          cronoState = "stopped";
+          maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+          showedCrono = `00:${maximoTiempo}:00:0`;
+          pararTimer();
+          timer.removeAllEventListeners();
+        });
+      }
+    } else if (timerTask.stoppedMoment) {
+      console.log("tiempo parado");
 
-    cronoState = "paused";
-    showedCrono = timerTask.showedTimerForPause;
-  }
+      cronoState = "paused";
+      showedCrono = timerTask.showedTimerForPause;
+    }
+  // }
 
   function getTime() {
     return timer
@@ -251,7 +246,6 @@
       {timerTask.title} ✏️
     </p>
   {/if}
-  <!-- <p>{timerTask.maxTime}</p> -->
   <p>{showedCrono}</p>
   <div class="botones">
     {#if cronoState === "stopped"}

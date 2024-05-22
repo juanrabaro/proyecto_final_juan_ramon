@@ -79,16 +79,19 @@
   function handleDndFinalizeTimer(e) {
     // console.log("handleDndFinalizeTimer");
     notMoving();
-    console.log($dndMoving);
     timerTasks = e.detail.items;
     // dndMoving = false;
     idDndMoving = "";
   }
   function transformDraggedElement(draggedEl, data, index) {
-    // console.log("transformDraggedElement");
-		const msg = `Moving...`;
-		draggedEl.innerHTML = msg;
-	}
+    const msg = `Moving...`;
+    draggedEl.innerHTML = msg;
+    draggedEl.style.backgroundColor = "black";
+    draggedEl.style.color = "white";
+    draggedEl.style.display = "flex";
+    draggedEl.style.justifyContent = "center";
+    draggedEl.style.alignItems = "center";
+  }
   function handleDndConsiderCrono(e) {
     cronoTasks = e.detail.items;
   }
@@ -123,7 +126,12 @@
         </div>
         <section
           class="timer-task-container"
-          use:dndzone={{ items: timerTasks, flipDurationMs, type: "timer", transformDraggedElement }}
+          use:dndzone={{
+            items: timerTasks,
+            flipDurationMs,
+            type: "timer",
+            transformDraggedElement,
+          }}
           on:consider={handleDndConsiderTimer}
           on:finalize={handleDndFinalizeTimer}
         >
@@ -136,9 +144,9 @@
                 {inputValueToUpdate}
                 {timerTasks}
                 {timerTask}
-                />
-                <!-- {dndMoving} -->
-                <!-- {...(timerTask.id === idDndMoving ? { dndMoving } : { dndMoving: false })} -->
+              />
+              <!-- {dndMoving} -->
+              <!-- {...(timerTask.id === idDndMoving ? { dndMoving } : { dndMoving: false })} -->
             </div>
           {/each}
         </section>

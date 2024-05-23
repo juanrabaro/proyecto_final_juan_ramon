@@ -104,6 +104,9 @@
       return newItem;
     });
   }
+
+
+  // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
   function orderArray(orderedArray, updatedArray) {
     let newTimerTasks = [];
     newTimerTasks = orderedArray.map((task) => {
@@ -123,6 +126,7 @@
       let resTimerTasks = await getTimerTasks(tokenFormated);
       resTimerTasks = replaceId(resTimerTasks.data);
 
+      // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
       timerTasks = orderArray(timerTasks, resTimerTasks);
     } catch (error) {
       console.error(error);

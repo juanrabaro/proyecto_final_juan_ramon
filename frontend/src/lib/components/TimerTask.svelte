@@ -99,7 +99,7 @@
   }
 
   function refreshTimerTasks() {
-    dispatch("updateTimerTasks");
+    dispatch("refreshTimerTasks");
   }
 
   async function handleClickButton(e) {
@@ -111,6 +111,7 @@
           running: "run",
         });
         console.log(res);
+        refreshTimerTasks();
 
         cronoState = "running";
 
@@ -153,6 +154,7 @@
           showedTimerForPause: showedCrono,
         });
         console.log(res);
+        refreshTimerTasks();
 
         cronoState = "paused";
 
@@ -168,6 +170,7 @@
           running: "stop",
         });
         console.log(res);
+        refreshTimerTasks();
 
         cronoState = "stopped";
 

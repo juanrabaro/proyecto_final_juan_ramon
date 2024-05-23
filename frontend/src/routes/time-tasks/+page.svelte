@@ -6,6 +6,9 @@
   import CronoTask from "$lib/components/CronoTask.svelte";
   import TimerTask from "$lib/components/TimerTask.svelte";
   import { dndMoving, moving, notMoving } from "$lib/stores/dndStore.js";
+  import { verifyToken } from "$lib/api/auth.js";
+  import { getTimerTasks } from "$lib/api/timerTask.js";
+  import { extractToken } from "$lib/api/extractToken";
 
   export let data;
 
@@ -20,6 +23,7 @@
 
   let timerTasks = data.timerTasks;
   let cronoTasks = data.cronoTasks;
+  let token = data.token;
 
   let taskTypeSelected = "timer";
   let titleTimeTask = "";
@@ -93,8 +97,36 @@
     cronoTasks = e.detail.items;
   }
 
-  function handleRefreshTimerTasks() {
-    console.log("refrescando timer tasks");
+  function replaceId(array) {
+    return array.map((item) => {
+      const newItem = { ...item, id: item._id };
+      delete newItem._id;
+      return newItem;
+    });
+  }
+  function orderArray(orderedArray, updatedArray) {
+    let newTimerTasks = [];
+    newTimerTasks = orderedArray.map((task) => {
+      const taskFound = updatedArray.find((taskRes) => {
+        return taskRes.id === task.id;
+      });
+      return taskFound ? taskFound : task;
+    });
+    return newTimerTasks;
+  }
+  async function handleRefreshTimerTasks() {
+    console.log("llega");
+    try {
+      const tokenFormated = extractToken(token);
+      await verifyToken({ token: tokenFormated });
+
+      let resTimerTasks = await getTimerTasks(tokenFormated);
+      resTimerTasks = replaceId(resTimerTasks.data);
+
+      timerTasks = orderArray(timerTasks, resTimerTasks);
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
 

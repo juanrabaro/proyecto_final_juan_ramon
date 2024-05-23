@@ -34,7 +34,7 @@
 
   // console.log("siempre llega", cardIsMoving);
   if (!isMoving) {
-    console.log("llega si está quieto", isMoving);
+    // console.log("llega si está quieto", isMoving);
 
     if (timerTask.timeStarted && !timerTask.stoppedMoment) {
       console.log("tiempo corriendo");
@@ -96,6 +96,10 @@
     const seconds = parseInt(timeSplited[2]) * 10;
     const secondTenths = parseInt(timeSplited[3]);
     return hours + minutes + seconds + secondTenths;
+  }
+
+  function refreshTimerTasks() {
+    dispatch("updateTimerTasks");
   }
 
   async function handleClickButton(e) {

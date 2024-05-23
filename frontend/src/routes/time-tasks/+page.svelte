@@ -60,13 +60,11 @@
   function handleDeleteCronoTask(event) {
     const taskId = event.detail;
     cronoTasks = cronoTasks.filter((task) => task.id !== taskId);
-    console.log(cronoTasks);
   }
 
   function handleDeleteTimerTask(event) {
-    const newTimerTasks = timerTasks.filter((task) => task.id !== event.detail);
-    timerTasks = [];
-    timerTasks = newTimerTasks;
+    const taskId = event.detail;
+    timerTasks = timerTasks.filter((task) => task.id !== taskId);
   }
 
   function handleDndConsiderTimer(e) {
@@ -93,6 +91,10 @@
   }
   function handleDndFinalizeCrono(e) {
     cronoTasks = e.detail.items;
+  }
+
+  function handleRefreshTimerTasks() {
+    console.log("refrescando timer tasks");
   }
 </script>
 
@@ -135,6 +137,7 @@
             <div animate:flip={{ duration: flipDurationMs }}>
               <TimerTask
                 on:deleteTimerTask={handleDeleteTimerTask}
+                on:refreshTimerTasks={handleRefreshTimerTasks}
                 {titleEditMode}
                 {idTaskToUpdate}
                 {inputValueToUpdate}

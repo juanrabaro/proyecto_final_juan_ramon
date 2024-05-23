@@ -70,17 +70,13 @@
   }
 
   function handleDndConsiderTimer(e) {
-    // console.log("handleDndConsiderTimer");
     moving();
     timerTasks = e.detail.items;
     idDndMoving = e.detail.info.id;
-    // dndMoving = true;
   }
   function handleDndFinalizeTimer(e) {
-    // console.log("handleDndFinalizeTimer");
     notMoving();
     timerTasks = e.detail.items;
-    // dndMoving = false;
     idDndMoving = "";
   }
   function transformDraggedElement(draggedEl, data, index) {

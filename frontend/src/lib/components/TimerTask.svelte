@@ -14,24 +14,27 @@
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
-  let cardIsMoving;
 
-  dndMoving.subscribe((value) => {
-    cardIsMoving = value;
+  let isMoving = false;
+  $: {
+    console.log("dndMoving changed:", $dndMoving);
+    isMoving = $dndMoving;
+  }
+
+  const timer = new Timer({
+    countdown: true,
+    precision: "secondTenths",
+    target: { secondTenths: 0 },
   });
-  // console.log("fuera", cardIsMoving);
-  // if (!cardIsMoving) {
-    // console.log("dentro", cardIsMoving);
-    const timer = new Timer({
-      countdown: true,
-      precision: "secondTenths",
-      target: { secondTenths: 0 },
-    });
-    let cronoState = "stopped";
-    let maximoTiempo = timerTask.maxTime.toString();
+  let cronoState = "stopped";
+  let maximoTiempo = timerTask.maxTime.toString();
 
-    maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-    let showedCrono = `00:${maximoTiempo}:00:0`;
+  maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+  let showedCrono = `00:${maximoTiempo}:00:0`;
+
+  // console.log("siempre llega", cardIsMoving);
+  if (!isMoving) {
+    console.log("llega si está quieto", isMoving);
 
     if (timerTask.timeStarted && !timerTask.stoppedMoment) {
       console.log("tiempo corriendo");
@@ -73,12 +76,12 @@
         });
       }
     } else if (timerTask.stoppedMoment) {
-      console.log("tiempo parado");
+      // console.log("tiempo parado");
 
       cronoState = "paused";
       showedCrono = timerTask.showedTimerForPause;
     }
-  // }
+  }
 
   function getTime() {
     return timer

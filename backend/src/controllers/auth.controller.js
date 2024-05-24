@@ -12,6 +12,8 @@ export const register = async (req, res) => {
     const userFound = await User.findOne({ email })
     if (userFound) return res.status(400).json({ message: 'The email is already in use' })
 
+    if (password.length < 8) return res.status(400).json({ message: 'Password must be at least 8 characters' })
+
     const passwordHash = await bcrypt.hash(password, 10)
 
     const newUser = new User({ username, email, password: passwordHash })

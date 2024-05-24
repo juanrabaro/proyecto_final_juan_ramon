@@ -4,7 +4,8 @@
   import { goto } from "$app/navigation";
   import { user, loginStore, logoutStore } from "$lib/stores/authStore.js";
   import { verifyToken } from "$lib/api/auth.js";
-
+  import { initLoading, endLoading } from "$lib/stores/loadingLogoutStore.js";
+  
   onMount(async () => {
     try {
       const token = Cookies.get("token");
@@ -23,8 +24,10 @@
   });
 
   function logout() {
+    initLoading();
     logoutStore();
     goto("/login");
+    endLoading();
   }
 </script>
 

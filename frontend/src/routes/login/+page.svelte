@@ -8,6 +8,8 @@
     email: "",
     password: "",
   };
+  let error = false;
+  let errorMessage = "User or password incorrect";
 
   function handleInput(e) {
     formData = {
@@ -17,20 +19,22 @@
   }
 
   async function handleLogin(e) {
-    loading = true;
     e.preventDefault();
     try {
       const res = await login(formData);
       console.log(res);
-
+      error = false;
+      loading = true;
+      
       loginStore(formData);
       formData = {
         email: "",
         password: "",
       };
-
+      
       goto("/");
     } catch (err) {
+      error = true;
       console.error(err);
     }
   }
@@ -62,6 +66,10 @@
         on:input={handleInput}
         bind:value={formData.password}
       />
+
+      {#if error}
+        <p>{errorMessage}</p>
+      {/if}
 
       <button on:click={handleLogin}>Login</button>
     </form>

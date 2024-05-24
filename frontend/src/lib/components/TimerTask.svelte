@@ -17,7 +17,7 @@
 
   let isMoving = false;
   $: {
-    console.log("dndMoving changed:", $dndMoving);
+    // console.log("dndMoving changed:", $dndMoving);
     isMoving = $dndMoving;
   }
 
@@ -32,10 +32,8 @@
   maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
   let showedCrono = `00:${maximoTiempo}:00:0`;
 
-  // console.log("siempre llega", cardIsMoving);
+  
   if (!isMoving) {
-    // console.log("llega si está quieto", isMoving);
-
     if (timerTask.timeStarted && !timerTask.stoppedMoment) {
       console.log("tiempo corriendo");
       cronoState = "running";

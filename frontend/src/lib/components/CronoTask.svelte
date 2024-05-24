@@ -5,50 +5,59 @@
   import StopImg from "$lib/assets/stop.png";
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
+  import { dndMoving } from "$lib/stores/dndStore.js";
 
   const dispatch = createEventDispatcher();
-  
+
   export let cronoTasks;
   export let cronoTask;
   export let titleEditMode;
   export let idTaskToUpdate;
   export let inputValueToUpdate;
-  
+
+  let isMoving = false;
+  $: {
+    // console.log("dndMoving changed:", $dndMoving);
+    isMoving = $dndMoving;
+  }
+
   const timer = new Timer();
   let cronoState = "stopped";
   let showedCrono = "00:00:00:0";
-  
-  // console.log(cronoTask);
 
-  if (cronoTask.running === "stopped") {
-    cronoState = "stopped";
-    timer.stop();
-    showedCrono = "00:00:00:0";
-  } else if (cronoTask.running === "running") {
-    cronoState = "running";
-    const actualTime =
-      (new Date() -
-        new Date(cronoTask.timeStarted) -
-        cronoTask.stoppedTime * 100) /
-      100;
+  if (!isMoving) {
+    if (cronoTask.running === "stopped") {
+      cronoState = "stopped";
+      timer.stop();
+      showedCrono = "00:00:00:0";
+    } else if (cronoTask.running === "running") {
+      cronoState = "running";
+      const actualTime =
+        (new Date() -
+          new Date(cronoTask.timeStarted) -
+          cronoTask.stoppedTime * 100) /
+        100;
 
-    timer.start({
-      precision: "secondTenths",
-      startValues: { secondTenths: actualTime },
-    });
-    timer.addEventListener("secondTenthsUpdated", function () {
-      showedCrono = getTime();
-    });
-  } else if (cronoTask.running === "paused") {
-    cronoState = "paused";
-    timer.start({
-      precision: "secondTenths",
-      startValues: {
-        secondTenths: transformIntoSecondTenths(cronoTask.showedCronoForPause),
-      },
-    });
-    timer.pause();
-    showedCrono = cronoTask.showedCronoForPause;
+      timer.start({
+        precision: "secondTenths",
+        startValues: { secondTenths: actualTime },
+      });
+      timer.addEventListener("secondTenthsUpdated", function () {
+        showedCrono = getTime();
+      });
+    } else if (cronoTask.running === "paused") {
+      cronoState = "paused";
+      timer.start({
+        precision: "secondTenths",
+        startValues: {
+          secondTenths: transformIntoSecondTenths(
+            cronoTask.showedCronoForPause,
+          ),
+        },
+      });
+      timer.pause();
+      showedCrono = cronoTask.showedCronoForPause;
+    }
   }
 
   function getTime() {
@@ -66,6 +75,10 @@
     return hours + minutes + seconds + secondTenths;
   }
 
+  function refreshCronoTasks() {
+    dispatch("refreshCronoTasks");
+  }
+
   async function handleClickButton(e) {
     const botonClickado = e.target.alt;
     if (botonClickado === "run") {
@@ -75,7 +88,8 @@
           running: "run",
         });
         // console.log(res);
-        console.log("EMPIEZA");
+        refreshCronoTasks();
+        // console.log("EMPIEZA");
 
         cronoState = "running";
 
@@ -106,7 +120,8 @@
           showedCronoForPause: showedCrono,
         });
         // console.log(res);
-        console.log("PAUSATE");
+        refreshCronoTasks();
+        // console.log("PAUSATE");
 
         cronoState = "paused";
 
@@ -122,7 +137,8 @@
           running: "stop",
         });
         // console.log(res);
-        console.log("PARATE");
+        refreshCronoTasks();
+        // console.log("PARATE");
 
         cronoState = "stopped";
 

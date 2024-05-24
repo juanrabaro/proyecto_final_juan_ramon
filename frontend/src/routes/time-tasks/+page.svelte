@@ -5,16 +5,16 @@
   import { addCronoTask } from "$lib/api/cronoTask.js";
   import CronoTask from "$lib/components/CronoTask.svelte";
   import TimerTask from "$lib/components/TimerTask.svelte";
-  import { dndMoving, moving, notMoving } from "$lib/stores/dndStore.js";
+  import { moving, notMoving } from "$lib/stores/dndStore.js";
   import { verifyToken } from "$lib/api/auth.js";
   import { getTimerTasks } from "$lib/api/timerTask.js";
+  import { getCronoTasks } from "$lib/api/cronoTask.js";
   import { extractToken } from "$lib/api/extractToken";
 
   export let data;
 
   // console.log(data.cronoTasks);
   const flipDurationMs = 300;
-  // let dndMoving = false;
   let idDndMoving = "";
 
   let titleEditMode = false;
@@ -91,10 +91,16 @@
     draggedEl.style.alignItems = "center";
   }
   function handleDndConsiderCrono(e) {
+    // cronoTasks = e.detail.items;
+    moving();
     cronoTasks = e.detail.items;
+    idDndMoving = e.detail.info.id;
   }
   function handleDndFinalizeCrono(e) {
+    // cronoTasks = e.detail.items;
+    notMoving();
     cronoTasks = e.detail.items;
+    idDndMoving = "";
   }
 
   function replaceId(array) {
@@ -104,7 +110,6 @@
       return newItem;
     });
   }
-
 
   // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
   function orderArray(orderedArray, updatedArray) {
@@ -118,7 +123,6 @@
     return newTimerTasks;
   }
   async function handleRefreshTimerTasks() {
-    console.log("llega");
     try {
       const tokenFormated = extractToken(token);
       await verifyToken({ token: tokenFormated });
@@ -128,6 +132,20 @@
 
       // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
       timerTasks = orderArray(timerTasks, resTimerTasks);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function handleRefreshCronoTasks() {
+    try {
+      const tokenFormated = extractToken(token);
+      await verifyToken({ token: tokenFormated });
+
+      let resCronoTasks = await getCronoTasks(tokenFormated);
+      resCronoTasks = replaceId(resCronoTasks.data);
+
+      // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
+      cronoTasks = orderArray(cronoTasks, resCronoTasks);
     } catch (error) {
       console.error(error);
     }
@@ -180,8 +198,6 @@
                 {timerTasks}
                 {timerTask}
               />
-              <!-- {dndMoving} -->
-              <!-- {...(timerTask.id === idDndMoving ? { dndMoving } : { dndMoving: false })} -->
             </div>
           {/each}
         </section>
@@ -195,7 +211,12 @@
         </div>
         <section
           class="crono-task-container"
-          use:dndzone={{ items: cronoTasks, flipDurationMs, type: "crono" }}
+          use:dndzone={{
+            items: cronoTasks,
+            flipDurationMs,
+            type: "crono",
+            transformDraggedElement,
+          }}
           on:consider={handleDndConsiderCrono}
           on:finalize={handleDndFinalizeCrono}
         >
@@ -203,6 +224,7 @@
             <div animate:flip={{ duration: flipDurationMs }}>
               <CronoTask
                 on:deleteCronoTask={handleDeleteCronoTask}
+                on:refreshCronoTasks={handleRefreshCronoTasks}
                 {titleEditMode}
                 {idTaskToUpdate}
                 {inputValueToUpdate}

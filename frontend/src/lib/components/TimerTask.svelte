@@ -32,10 +32,10 @@
   maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
   let showedCrono = `00:${maximoTiempo}:00:0`;
 
-  
+  timer.removeAllEventListeners();
   if (!isMoving) {
     if (timerTask.timeStarted && !timerTask.stoppedMoment) {
-      console.log("tiempo corriendo");
+      // console.log("tiempo corriendo");
       cronoState = "running";
 
       const tiempoTranscurrido =
@@ -58,19 +58,24 @@
           precision: "secondTenths",
           startValues: { secondTenths: actualTime },
         });
+        timer.removeAllEventListeners();
         timer.addEventListener("secondTenthsUpdated", function () {
           showedCrono = getTime();
         });
+        console.log("añadido targetAchieved");
         timer.addEventListener("targetAchieved", function (e) {
-          console.log("Time has run out!");
-          if (typeof window !== "undefined") {
-            alert(`The timer ${timerTask.title} has finished!`);
+          // console.log("dentro de targetAchieved");
+          if (cronoState !== "stopped") {
+            // console.log("Time has run out!");
+            cronoState = "stopped";
+            maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+            showedCrono = `00:${maximoTiempo}:00:0`;
+            pararTimer();
+            timer.removeAllEventListeners();
+            if (typeof window !== "undefined") {
+              alert(`The timer ${timerTask.title} has finished!`);
+            }
           }
-          cronoState = "stopped";
-          maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-          showedCrono = `00:${maximoTiempo}:00:0`;
-          pararTimer();
-          timer.removeAllEventListeners();
         });
       }
     } else if (timerTask.stoppedMoment) {
@@ -119,17 +124,24 @@
               secondTenths: transformIntoSecondTenths(showedCrono),
             },
           });
+          timer.removeAllEventListeners();
           timer.addEventListener("secondTenthsUpdated", function () {
             showedCrono = getTime();
           });
+          console.log("añadido targetAchieved");
           timer.addEventListener("targetAchieved", function (e) {
-            console.log("Time has run out!");
-            alert(`The timer ${timerTask.title} has finished!`);
-            cronoState = "stopped";
-            maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
-            showedCrono = `00:${maximoTiempo}:00:0`;
-            pararTimer();
-            timer.removeAllEventListeners();
+            // console.log("dentro de targetAchieved");
+            if (cronoState !== "stopped") {
+              // console.log("Time has run out!");
+              cronoState = "stopped";
+              maximoTiempo.length === 1 && (maximoTiempo = "0" + maximoTiempo);
+              showedCrono = `00:${maximoTiempo}:00:0`;
+              pararTimer();
+              timer.removeAllEventListeners();
+              if (typeof window !== "undefined") {
+                alert(`The timer ${timerTask.title} has finished!`);
+              }
+            }
           });
         } else {
           timer.start({
@@ -137,6 +149,7 @@
               secondTenths: transformIntoSecondTenths(showedCrono),
             },
           });
+          timer.removeAllEventListeners();
           timer.addEventListener("secondTenthsUpdated", function () {
             showedCrono = getTime();
           });
@@ -176,7 +189,7 @@
         showedCrono = `00:${maximoTiempo}:00:0`;
 
         timer.stop();
-        timer.removeEventListener("targetAchieved");
+        timer.removeAllEventListeners();
       } catch (error) {
         console.error(error);
       }

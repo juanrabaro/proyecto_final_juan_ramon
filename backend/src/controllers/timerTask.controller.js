@@ -123,7 +123,11 @@ async function stopTimer(req, res) {
     return res.status(400).json({ message: 'Task not found' })
   }
 
+  // console.log(oldTask);
+  // console.log(oldTask.running);
+
   if (oldTask.running === "running") {
+    // console.log("deberia aqui");
     const updatedTask = await TimerTask.findByIdAndUpdate(
       req.params.id,
       {
@@ -140,7 +144,8 @@ async function stopTimer(req, res) {
       { new: true });
   
     res.json(updatedTask);
-  } else {
+  } else if (oldTask.running === "paused") {
+    // console.log("aqui no");
     const updatedTask = await TimerTask.findByIdAndUpdate(
       req.params.id,
       {

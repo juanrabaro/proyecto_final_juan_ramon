@@ -15,15 +15,6 @@
     } catch (err) {
       console.log("Error con el token o no encontrado en el header");
     }
-
-    const links = document.querySelectorAll('nav ul li a');
-    const checkbox = document.querySelector('.checkbox-menu');
-
-    links.forEach(link => {
-      link.addEventListener('click', () => {
-        checkbox.checked = false;
-      });
-    });
   });
 
   let userHeader;
@@ -41,22 +32,22 @@
 </script>
 
 <header>
-  <h1>Task Master</h1>
   <nav>
-    {#if userHeader}
-    <label for="menu-hamburger" class="hamburger-menu-icon">
-      <img src={Menu} alt="menu">
+    <h1>Task Master</h1>
+    <label for="menu_hamburguesa">
+      <img src={Menu} alt="Menu" />
     </label>
-    <input id="menu-hamburger" class="checkbox-menu" type="checkbox" />
-      <ul>
+    <input type="checkbox" id="menu_hamburguesa" class="menu_hamburguesa" />
+    {#if userHeader}
+      <ul class="ul_links">
         <li><a href="/">Tasks</a></li>
         <li><a href="/time-tasks">TimeTasks</a></li>
         <li><a href="/stadistics">Stadistics</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       </ul>
-    {:else}
-      <ul>
+      {:else}
+      <ul class="ul_links">
         <li><a href="/login">Login</a></li>
         <li><a href="/register">Register</a></li>
       </ul>
@@ -67,52 +58,78 @@
 <style lang="scss">
   header {
     background-color: #3a0202;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 30px 20px 30px;
-
-    h1 {
-      color: rgb(213, 213, 213);
-      font-size: 1.9em;
-    }
-
+    // padding: 20px 30px 20px 30px;
+    // padding: 0;
+    height: 80px;
+    
     nav {
-      .checkbox-menu:checked ~ ul {
-        display: flex;
-      }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      flex-wrap: wrap;
+      position: relative;
+      padding: 0 20px 0 20px;
 
-      .checkbox-menu {
+      h1 {
+        color: rgb(213, 213, 213);
+        font-size: 1.9em;
+      }
+      label {
+        img {
+          width: 50px;
+          cursor: pointer;
+        }
+      }
+      input {
         display: none;
       }
-
+      .menu_hamburguesa:checked + .ul_links {
+        height: calc(100vh - 80px);
+      }
       ul {
+        // display: flex;
+        // flex-direction: row;
+        // align-items: center;
+        // justify-content: space-between;
+        width: 100%;
+        background-color: rgb(17, 88, 175);
+        position: absolute;
+        top: 80px;
+        left: 0;
+        height: calc(100vh - 80px);
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        justify-content: space-between;
+        gap: 3rem;
+        height: 0;
+        overflow: hidden;
+        transition: all 0.3s;
 
         li {
           list-style-type: none;
-          padding-right: 10px;
-
+          // padding-right: 10px;
+          
           a {
             text-decoration: none;
             color: rgb(213, 213, 213);
-            font-size: 1.1em;
+            // font-size: 1.1em;
+            font-size: 3rem;
           }
           a:hover {
             color: rgb(247, 115, 115);
           }
-
+          
           button {
             background-color: #ba3333;
             color: white;
             border: none;
             border-radius: 5px;
             padding: 5px 10px 5px 10px;
-            font-size: 1.1em;
+            // font-size: 1.1em;
+            font-size: 3em;
           }
           button:hover {
             cursor: pointer;
@@ -124,32 +141,31 @@
     }
   }
 
-  @media (max-width: 768px) {
-    header {
-      nav {
-        .checkbox-menu {
-          display: block;
+  @media (min-width: 768px) {
+    label {
+      display: none;
+    }
+    .ul_links {
+      position: static;
+      width: auto;
+      height: auto;
+      flex-direction: row;
+      gap: 2rem;
+
+      li {
+        a {
+          transition: all 0.3s;
+          padding: 0.2rem 0.7rem;
+          font-size: 1.1em;
         }
-        .checkbox-menu:checked ~ ul {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+        a:hover {
+          background-color: rgb(17, 44, 125);
         }
-        ul {
-          display: none;
-
-          li {
-            padding: 10px 0 10px 0;
-
-            a {
-              font-size: 1.5em;
-            }
-
-            button {
-              font-size: 1.5em;
-            }
-          }
+        button {
+          font-size: 1.1rem;
+        }
+        button:hover {
+          background-color: #740808;
         }
       }
     }

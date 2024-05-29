@@ -29,8 +29,15 @@
   let titleTimeTask = "";
   let maxTimeTimerTask = 30;
 
+  let formValid = true;
+  let errorMessage = "Fill all the fields with the correct format";
+
   async function createTimeTask() {
-    if (!titleTimeTask.length) return;
+    if (!titleTimeTask.length) {
+      formValid = false;
+      return;
+    }
+    formValid = true;
 
     if (taskTypeSelected === "crono") {
       try {
@@ -44,6 +51,12 @@
         console.error(error);
       }
     } else if (taskTypeSelected === "timer") {
+      if (!maxTimeTimerTask || !Number.isInteger(parseInt(maxTimeTimerTask))) {
+        formValid = false;
+        return;
+      }
+      maxTimeTimerTask = parseInt(maxTimeTimerTask);
+      formValid = true;
       try {
         const res = await addTimerTask({
           title: titleTimeTask,
@@ -161,10 +174,13 @@
     </select>
     <input bind:value={titleTimeTask} type="text" placeholder="Title" />
     {#if taskTypeSelected === "timer"}
-      <input bind:value={maxTimeTimerTask} type="text" placeholder="MaxTime" />
+      <input bind:value={maxTimeTimerTask} type="text" placeholder="Minutos" />
     {/if}
     <button on:click={createTimeTask}>Add Time Task</button>
   </section>
+  {#if !formValid}
+    <p style="color: red;">{errorMessage}</p>
+  {/if}
   <section class="task-container">
     {#if !timerTasks.length && !cronoTasks.length}
       <p>No time tasks</p>

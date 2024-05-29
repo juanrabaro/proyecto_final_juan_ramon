@@ -9,8 +9,15 @@
     title: "",
     description: "",
   };
+  let formValid = true;
+  let errorMessage = "Fill all the fields";
 
   async function handleSubmit(e) {
+    if (formData.title === "" || formData.description === "") {
+      formValid = false;
+      return;
+    }
+    formValid = true;
     loading = true;
     e.preventDefault();
     try {
@@ -55,6 +62,10 @@
         required
         bind:value={formData.description}
       />
+
+      {#if !formValid}
+        <p style="color: red;">{errorMessage}</p>
+      {/if}
 
       <button on:click={handleSubmit}>Add Task</button>
     </form>

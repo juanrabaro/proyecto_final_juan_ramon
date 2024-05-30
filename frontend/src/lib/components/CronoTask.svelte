@@ -1,8 +1,8 @@
 <script>
   import { Timer } from "easytimer.js";
-  import RunImg from "$lib/assets/run.png";
-  import PauseImg from "$lib/assets/pause.png";
-  import StopImg from "$lib/assets/stop.png";
+  import RunImg from "$lib/assets/images/run.png";
+  import PauseImg from "$lib/assets/images/pause.png";
+  import StopImg from "$lib/assets/images/stop.png";
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
   import { dndMoving } from "$lib/stores/dndStore.js";

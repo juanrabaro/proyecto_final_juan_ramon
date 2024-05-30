@@ -5,7 +5,7 @@
   import { user, loginStore, logoutStore } from "$lib/stores/authStore.js";
   import { verifyToken } from "$lib/api/auth.js";
   import { initLoading, endLoading } from "$lib/stores/loadingLogoutStore.js";
-  import Menu from "$lib/assets/menu.png";
+  import Menu from "$lib/assets/images/menu.png";
 
   onMount(async () => {
     try {
@@ -56,11 +56,11 @@
 </header>
 
 <style lang="scss">
+@import "../assets/styles/variablesYMixins.scss";
+
   header {
-    background-color: #3a0202;
-    // padding: 20px 30px 20px 30px;
-    // padding: 0;
-    height: 80px;
+    background-color: $fondo;
+    height: 150px;
     
     nav {
       display: flex;
@@ -71,10 +71,11 @@
       flex-wrap: wrap;
       position: relative;
       padding: 0 20px 0 20px;
-
+      
       h1 {
+        font-family: $fuente-titulos;
         color: rgb(213, 213, 213);
-        font-size: 1.9em;
+        font-size: 36px;
       }
       label {
         img {
@@ -86,19 +87,15 @@
         display: none;
       }
       .menu_hamburguesa:checked + .ul_links {
-        height: calc(100vh - 80px);
+        height: calc(100vh - 150px);
       }
       ul {
-        // display: flex;
-        // flex-direction: row;
-        // align-items: center;
-        // justify-content: space-between;
         width: 100%;
-        background-color: rgb(17, 88, 175);
+        background-color: $fondo;
         position: absolute;
-        top: 80px;
+        top: 150px;
         left: 0;
-        height: calc(100vh - 80px);
+        height: calc(100vh - 150px);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -107,12 +104,13 @@
         height: 0;
         overflow: hidden;
         transition: all 0.3s;
-
+        
         li {
           list-style-type: none;
           // padding-right: 10px;
           
           a {
+            font-family: $fuente-textos;
             text-decoration: none;
             color: rgb(213, 213, 213);
             // font-size: 1.1em;
@@ -123,18 +121,11 @@
           }
           
           button {
-            background-color: #ba3333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px 5px 10px;
-            // font-size: 1.1em;
-            font-size: 3em;
+            @include boton-azul(3rem);
           }
           button:hover {
             cursor: pointer;
-            background-color: #740808;
-            border: 1px solid #df7171;
+            background-color: $azul-hover;
           }
         }
       }
@@ -156,16 +147,17 @@
         a {
           transition: all 0.3s;
           padding: 0.2rem 0.7rem;
-          font-size: 1.1em;
+          font-size: 27px;
         }
         a:hover {
           background-color: rgb(17, 44, 125);
         }
         button {
-          font-size: 1.1rem;
+          font-size: 24px;
         }
         button:hover {
-          background-color: #740808;
+          background-color: $azul-hover;
+          transition: all 0.2s;
         }
       }
     }

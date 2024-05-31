@@ -82,7 +82,7 @@
 
         h1 {
           font-family: $fuente-titulos;
-          color: rgb(213, 213, 213);
+          color: $texto;
           font-size: 36px;
         }
         h1:hover {
@@ -128,7 +128,7 @@
           a {
             font-family: $fuente-textos;
             text-decoration: none;
-            color: rgb(213, 213, 213);
+            color: $texto;
             // font-size: 1.1em;
             font-size: 3rem;
           }
@@ -164,6 +164,7 @@
           transition: all 0.2s;
           padding: 0.2rem 0.7rem;
           font-size: 27px;
+          color: $texto;
         }
         button {
           font-size: 24px;

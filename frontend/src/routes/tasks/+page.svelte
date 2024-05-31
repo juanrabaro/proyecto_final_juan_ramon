@@ -104,7 +104,7 @@
 </script>
 
 <main>
-  <h1>TASKS</h1>
+  <h1>Tasks</h1>
   <button on:click={handleGoToAddTask}>Add Task</button>
   {#if loading}
     <div class="lds-dual-ring"></div>
@@ -136,12 +136,17 @@
 </main>
 
 <style lang="scss">
+@import "../../lib/assets/styles/variablesYMixins.scss";
   main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    @include flex(column, center, center, 20px);
+    background-color: $fondo;
     padding-top: 50px;
+
+    h1 {
+      font-size: 44px;
+      font-family: $fuente-titulos;
+      color: $texto;
+    }
 
     button {
       background-color: #ba3333;

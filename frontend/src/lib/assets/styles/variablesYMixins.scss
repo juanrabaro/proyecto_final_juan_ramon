@@ -4,7 +4,8 @@
 // Variables
 $azul: #00ADB5;
 $azul-hover: #028f96;
-$texto: #EEEEEE;
+// $texto: #EEEEEE;
+$texto: #d5d5d5;
 $placeholders: #B3B3B3;
 $inputs: #4A515D;
 $cards: #393E46;
@@ -17,7 +18,7 @@ $fuente-textos: 'Kantumruy Pro', sans-serif;
 // Mixins
 @mixin boton-azul($font-size) {
   font-size: $font-size;
-  color: $texto;
+  color: #eeeeee;
   background-color: $azul;
   font-family: $fuente-textos;
   border-radius: 15px;
@@ -25,6 +26,14 @@ $fuente-textos: 'Kantumruy Pro', sans-serif;
   // box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   padding: 10px 20px 10px 20px;
+}
+
+@mixin flex($direction, $justify, $align, $gap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
 }
 
 // .container {

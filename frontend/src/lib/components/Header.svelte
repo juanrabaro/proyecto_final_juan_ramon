@@ -33,7 +33,12 @@
 
 <header>
   <nav>
-    <h1>Task Master</h1>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-missing-attribute -->
+    <a class="enlace-titulo" on:click={() => goto("/tasks")}>
+      <h1>Task Master</h1>
+    </a>
     <label for="menu_hamburguesa">
       <img src={Menu} alt="Menu" />
     </label>
@@ -46,7 +51,7 @@
         <li><a href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       </ul>
-      {:else}
+    {:else}
       <ul class="ul_links">
         <li><a href="/login">Login</a></li>
         <li><a href="/register">Register</a></li>
@@ -56,12 +61,12 @@
 </header>
 
 <style lang="scss">
-@import "../assets/styles/variablesYMixins.scss";
+  @import "../assets/styles/variablesYMixins.scss";
 
   header {
     background-color: $fondo;
     height: 150px;
-    
+
     nav {
       display: flex;
       flex-direction: row;
@@ -70,17 +75,28 @@
       height: 100%;
       flex-wrap: wrap;
       position: relative;
-      padding: 0 20px 0 20px;
-      
-      h1 {
-        font-family: $fuente-titulos;
-        color: rgb(213, 213, 213);
-        font-size: 36px;
+      padding: 0 100px 0 100px;
+
+      .enlace-titulo {
+        cursor: pointer;
+
+        h1 {
+          font-family: $fuente-titulos;
+          color: rgb(213, 213, 213);
+          font-size: 36px;
+        }
+        h1:hover {
+          color: $azul-hover;
+        }
       }
+
       label {
         img {
           width: 50px;
           cursor: pointer;
+        }
+        img:hover {
+          filter: brightness(0.8);
         }
       }
       input {
@@ -104,11 +120,11 @@
         height: 0;
         overflow: hidden;
         transition: all 0.3s;
-        
+
         li {
           list-style-type: none;
           // padding-right: 10px;
-          
+
           a {
             font-family: $fuente-textos;
             text-decoration: none;
@@ -117,9 +133,9 @@
             font-size: 3rem;
           }
           a:hover {
-            color: rgb(247, 115, 115);
+            color: $azul-hover;
           }
-          
+
           button {
             @include boton-azul(3rem);
           }
@@ -132,7 +148,7 @@
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1110px) {
     label {
       display: none;
     }
@@ -141,16 +157,13 @@
       width: auto;
       height: auto;
       flex-direction: row;
-      gap: 2rem;
+      gap: 0.8rem;
 
       li {
         a {
-          transition: all 0.3s;
+          transition: all 0.2s;
           padding: 0.2rem 0.7rem;
           font-size: 27px;
-        }
-        a:hover {
-          background-color: rgb(17, 44, 125);
         }
         button {
           font-size: 24px;
@@ -158,6 +171,23 @@
         button:hover {
           background-color: $azul-hover;
           transition: all 0.2s;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 510px) {
+    header {
+      nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .enlace-titulo {
+          h1 {
+            text-align: center;
+          }
         }
       }
     }

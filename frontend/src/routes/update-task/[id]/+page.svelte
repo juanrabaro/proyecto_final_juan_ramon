@@ -9,13 +9,17 @@
   let id;
   page.subscribe(({ params }) => {
     id = params.id;
+    console.log(id);
   });
 
+  let loading = false;
   let task = {
     _id: "",
     title: "",
     description: "",
   };
+  let formValid = true;
+  let errorMessage = "Fill all the fields";
 
   onMount(async () => {
     try {
@@ -28,18 +32,17 @@
     }
   });
 
-  function handleInput(e) {
-    task = {
-      ...task,
-      [e.target.name]: e.target.value,
-    };
-  }
-
   async function handleUpdate() {
+    if (task.title === "" || task.description === "") {
+      formValid = false;
+      return;
+    }
+    formValid = true;
+    loading = true;
     try {
       const res = await updateTask(task, data.token);
       console.log(res);
-      goto("/")
+      goto("/");
     } catch (error) {
       console.error(error);
     }
@@ -47,71 +50,131 @@
 </script>
 
 <main>
-  <h1>Update task</h1>
+  <section class="update-task-card">
+    <h1>Update task</h1>
 
-  <form>
-    <label for="title">Title</label>
-    <input
-      type="title"
-      id="title"
-      name="title"
-      required
-      on:input={handleInput}
-      bind:value={task.title}
-    />
+    {#if loading}
+      <div class="lds-dual-ring"></div>
+    {:else}
+      <form>
+        <input
+          placeholder="New title"
+          type="title"
+          id="title"
+          name="title"
+          required
+          bind:value={task.title}
+        />
 
-    <label for="description">Description</label>
-    <input
-      type="description"
-      id="description"
-      name="description"
-      required
-      on:input={handleInput}
-      bind:value={task.description}
-    />
+        <textarea
+          placeholder="New short description"
+          type="description"
+          id="description"
+          name="description"
+          required
+          bind:value={task.description}
+        />
 
-    <button on:click={handleUpdate}>Update task</button>
-  </form>
+        {#if !formValid}
+        <p class="error">{errorMessage}</p>
+        {/if}
+      </form>
+      <button on:click={handleUpdate}>Update task</button>
+    {/if}
+  </section>
 </main>
 
 <style lang="scss">
+  @import "../../../lib/assets/styles/variablesYMixins.scss";
+
   main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 5%;
 
-    h1 {
-      padding-bottom: 20px;
-    }
+    .update-task-card {
+      background-color: $cards;
+      @include flex(column, space-evenly, center, 0);
+      height: 470px;
+      width: 50%;
+      box-shadow: $sombra;
+      border-radius: 20px;
 
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-
-      input {
-        padding: 5px;
-        border-radius: 5px;
-        border: 0;
+      h1 {
+        font-family: $fuente-titulos;
+        color: $texto;
+        font-size: 48px;
       }
-      input:focus {
-        outline: none;
-        border: 3px solid #df7171;
-        border-radius: 5px;
+
+      form {
+        @include flex(column, space-between, center, 20px);
+
+        input {
+          background-color: $inputs;
+          color: $placeholders;
+          border-radius: 15px;
+          border: 0;
+          box-shadow: $sombra-floja;
+          text-align: center;
+          font-size: 30px;
+          width: 90%;
+          padding: 8px 0px 8px 0px;
+        }
+        textarea {
+          background-color: $inputs;
+          color: $placeholders;
+          border-radius: 15px;
+          border: 0;
+          box-shadow: $sombra-floja;
+          text-align: center;
+          font-size: 30px;
+          width: 90%;
+          height: 100px;
+          resize: none;
+          padding: 8px 0px 8px 0px;
+        }
       }
 
       button {
-        margin-top: 8px;
-        padding: 7px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+        @include boton-azul(24px);
+        width: 30%;
       }
       button:hover {
-        background-color: #df7171;
         cursor: pointer;
+        background-color: $azul-hover;
+      }
+
+      .error {
+        color: red;
+      }
+    }
+
+    .lds-dual-ring,
+    .lds-dual-ring:after {
+      box-sizing: border-box;
+    }
+    .lds-dual-ring {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-dual-ring:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 6.4px solid currentColor;
+      border-color: currentColor transparent currentColor transparent;
+      animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
       }
     }
   }

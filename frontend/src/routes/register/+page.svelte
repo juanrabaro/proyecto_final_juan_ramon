@@ -171,6 +171,7 @@
           text-align: center;
           font-size: 30px;
           width: 90%;
+          padding: 8px 0px 8px 0px;
         }
       }
 
@@ -193,8 +194,9 @@
       font-size: 24px;
       font-family: $fuente-titulos;
       margin-top: 20px;
-
+      
       span {
+        font-size: 32px;
         color: $azul;
         cursor: pointer;
         transition: all 0.2s;

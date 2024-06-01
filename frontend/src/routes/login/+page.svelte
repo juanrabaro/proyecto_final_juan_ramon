@@ -118,6 +118,7 @@
           text-align: center;
           font-size: 30px;
           width: 90%;
+          padding: 8px 0px 8px 0px;
         }
       }
 
@@ -145,6 +146,7 @@
         color: $azul;
         cursor: pointer;
         transition: all 0.2s;
+        font-size: 32px;
       }
       span:hover {
         color: $azul-hover;

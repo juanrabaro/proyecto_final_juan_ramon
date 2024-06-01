@@ -25,13 +25,13 @@
       console.log(res);
       error = false;
       loading = true;
-      
+
       loginStore(formData);
       formData = {
         email: "",
         password: "",
       };
-      
+
       goto("/");
     } catch (err) {
       error = true;
@@ -41,50 +41,114 @@
 </script>
 
 <main>
-  <h1>LOGIN</h1>
+  <section class="login-card">
+    <h1>Login</h1>
 
-  {#if loading}
-    <div class="lds-dual-ring"></div>
-  {:else}
-    <form>
-      <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        required
-        on:input={handleInput}
-        bind:value={formData.email}
-      />
+    {#if loading}
+      <div class="lds-dual-ring"></div>
+    {:else}
+      <form>
+        <input
+          placeholder="Email"
+          type="email"
+          id="email"
+          name="email"
+          required
+          on:input={handleInput}
+          bind:value={formData.email}
+        />
 
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        on:input={handleInput}
-        bind:value={formData.password}
-      />
+        <input
+          placeholder="Password"
+          type="password"
+          id="password"
+          name="password"
+          required
+          on:input={handleInput}
+          bind:value={formData.password}
+        />
 
-      {#if error}
-        <p>{errorMessage}</p>
-      {/if}
-
+        {#if error}
+          <p class="error">{errorMessage}</p>
+        {/if}
+      </form>
       <button on:click={handleLogin}>Login</button>
-    </form>
-  {/if}
+    {/if}
+  </section>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <p class="register">
+    You don´t have an account? <span on:click={() => goto("/register")}
+      >Register here</span
+    >
+  </p>
 </main>
 
 <style lang="scss">
+  @import "../../lib/assets/styles/variablesYMixins.scss";
+
   main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
 
-    h1 {
-      padding-bottom: 20px;
+    .login-card {
+      background-color: $cards;
+      @include flex(column, space-evenly, center, 0);
+      height: 470px;
+      width: 50%;
+      box-shadow: $sombra;
+      border-radius: 20px;
+
+      h1 {
+        font-family: $fuente-titulos;
+        color: $texto;
+        font-size: 48px;
+      }
+
+      form {
+        @include flex(column, space-between, center, 20px);
+
+        input {
+          background-color: $inputs;
+          color: $placeholders;
+          border-radius: 15px;
+          border: 0;
+          box-shadow: $sombra-floja;
+          text-align: center;
+          font-size: 30px;
+          width: 90%;
+        }
+      }
+
+      button {
+        @include boton-azul(24px);
+        width: 30%;
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: $azul-hover;
+      }
+
+      .error {
+        color: red;
+      }
+    }
+
+    .register {
+      color: $texto;
+      font-size: 24px;
+      font-family: $fuente-titulos;
+      margin-top: 20px;
+
+      span {
+        color: $azul;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      span:hover {
+        color: $azul-hover;
+      }
     }
 
     .lds-dual-ring,
@@ -113,35 +177,6 @@
       }
       100% {
         transform: rotate(360deg);
-      }
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      input {
-        padding: 5px;
-        border-radius: 5px;
-        border: 0;
-      }
-      input:focus {
-        outline: none;
-        border: 3px solid #df7171;
-        border-radius: 5px;
-      }
-
-      button {
-        margin-top: 8px;
-        padding: 7px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-      }
-      button:hover {
-        background-color: #df7171;
-        cursor: pointer;
       }
     }
   }

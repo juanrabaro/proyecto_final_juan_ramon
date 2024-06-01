@@ -14,6 +14,8 @@ $fondo: #222831;
 $fuente-titulos: 'JetBrains Mono', monospace;
 $fuente-textos: 'Kantumruy Pro', sans-serif;
 
+$sombra: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+$sombra-floja: rgba(26, 26, 49, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 
 // Mixins
 @mixin boton-azul($font-size) {
@@ -23,8 +25,7 @@ $fuente-textos: 'Kantumruy Pro', sans-serif;
   font-family: $fuente-textos;
   border-radius: 15px;
   border: 0;
-  // box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  box-shadow: $sombra;
   padding: 10px 20px 10px 20px;
 }
 

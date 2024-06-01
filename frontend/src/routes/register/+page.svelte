@@ -78,66 +78,130 @@
 </script>
 
 <main>
-  <h1>Register</h1>
+  <section class="register-card">
+    <h1>Register</h1>
 
-  {#if loading}
-    <div class="lds-dual-ring"></div>
-  {:else}
-    <form>
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        required
-        bind:value={formData.username}
-      />
+    {#if loading}
+      <div class="lds-dual-ring"></div>
+    {:else}
+      <form>
+        <input
+          placeholder="Username"
+          type="text"
+          id="username"
+          name="username"
+          required
+          bind:value={formData.username}
+        />
 
-      <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        required
-        bind:value={formData.email}
-      />
+        <input
+          placeholder="Email"
+          type="email"
+          id="email"
+          name="email"
+          required
+          bind:value={formData.email}
+        />
 
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        bind:value={formData.password}
-      />
+        <input
+          placeholder="Password"
+          type="password"
+          id="password"
+          name="password"
+          required
+          bind:value={formData.password}
+        />
 
-      {#if errorsTypes.emptyFields}
-        <p>{errorsMessages.emptyFields}</p>
-      {/if}
-      {#if errorsTypes.emailFormat}
-        <p>{errorsMessages.emailFormat}</p>
-      {/if}
-      {#if errorsTypes.passwordLength}
-        <p>{errorsMessages.passwordLength}</p>
-      {/if}
-      {#if errorsTypes.userExist}
-        <p>{errorsMessages.userExist}</p>
-      {/if}
-
+        {#if errorsTypes.emptyFields}
+          <p class="error">{errorsMessages.emptyFields}</p>
+        {/if}
+        {#if errorsTypes.emailFormat}
+          <p class="error">{errorsMessages.emailFormat}</p>
+        {/if}
+        {#if errorsTypes.passwordLength}
+          <p class="error">{errorsMessages.passwordLength}</p>
+        {/if}
+        {#if errorsTypes.userExist}
+          <p class="error">{errorsMessages.userExist}</p>
+        {/if}
+      </form>
       <button on:click={handleRegister}>Register</button>
-    </form>
-  {/if}
+      {/if}
+    </section>
+    <p class="login">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      You already have an account? <span on:click={() => goto("/login")}
+        >Login here</span
+      >
+    </p>
 </main>
 
 <style lang="scss">
+  @import "../../lib/assets/styles/variablesYMixins.scss";
+
   main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
 
-    h1 {
-      padding-bottom: 20px;
+    .register-card {
+      background-color: $cards;
+      @include flex(column, space-evenly, center, 0);
+      height: 470px;
+      width: 50%;
+      box-shadow: $sombra;
+      border-radius: 20px;
+
+      h1 {
+        font-family: $fuente-titulos;
+        color: $texto;
+        font-size: 48px;
+      }
+
+      form {
+        @include flex(column, space-between, center, 20px);
+
+        input {
+          background-color: $inputs;
+          color: $placeholders;
+          border-radius: 15px;
+          border: 0;
+          box-shadow: $sombra-floja;
+          text-align: center;
+          font-size: 30px;
+          width: 90%;
+        }
+      }
+
+      button {
+        @include boton-azul(24px);
+        width: 30%;
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: $azul-hover;
+      }
+
+      .error {
+        color: red;
+      }
+    }
+
+    .login {
+      color: $texto;
+      font-size: 24px;
+      font-family: $fuente-titulos;
+      margin-top: 20px;
+
+      span {
+        color: $azul;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      span:hover {
+        color: $azul-hover;
+      }
     }
 
     .lds-dual-ring,
@@ -166,35 +230,6 @@
       }
       100% {
         transform: rotate(360deg);
-      }
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      input {
-        padding: 5px;
-        border-radius: 5px;
-        border: 0;
-      }
-      input:focus {
-        outline: none;
-        border: 3px solid #df7171;
-        border-radius: 5px;
-      }
-
-      button {
-        margin-top: 8px;
-        padding: 7px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-      }
-      button:hover {
-        background-color: #df7171;
-        cursor: pointer;
       }
     }
   }

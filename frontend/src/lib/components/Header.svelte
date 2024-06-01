@@ -28,6 +28,11 @@
     logoutStore();
     goto("/login");
     endLoading();
+    hideNav();
+  }
+
+  function hideNav() {
+    document.getElementById("menu_hamburguesa").checked = false;
   }
 </script>
 
@@ -45,16 +50,16 @@
     <input type="checkbox" id="menu_hamburguesa" class="menu_hamburguesa" />
     {#if userHeader}
       <ul class="ul_links">
-        <li><a href="/">Tasks</a></li>
-        <li><a href="/time-tasks">TimeTasks</a></li>
-        <li><a href="/stadistics">Stadistics</a></li>
-        <li><a href="/profile">Profile</a></li>
+        <li><a on:click={hideNav} href="/">Tasks</a></li>
+        <li><a on:click={hideNav} href="/time-tasks">TimeTasks</a></li>
+        <li><a on:click={hideNav} href="/stadistics">Stadistics</a></li>
+        <li><a on:click={hideNav} href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       </ul>
     {:else}
       <ul class="ul_links">
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
+        <li><a on:click={hideNav} href="/login">Login</a></li>
+        <li><a on:click={hideNav} href="/register">Register</a></li>
       </ul>
     {/if}
   </nav>
@@ -107,7 +112,8 @@
       }
       ul {
         width: 100%;
-        background-color: $fondo;
+        // background-color: $fondo;
+        background-color: $cards;
         position: absolute;
         top: 150px;
         left: 0;
@@ -153,6 +159,7 @@
       display: none;
     }
     .ul_links {
+      background-color: $fondo;
       position: static;
       width: auto;
       height: auto;

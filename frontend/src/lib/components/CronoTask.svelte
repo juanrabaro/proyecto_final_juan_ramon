@@ -3,6 +3,7 @@
   import RunImg from "$lib/assets/images/run.png";
   import PauseImg from "$lib/assets/images/pause.png";
   import StopImg from "$lib/assets/images/stop.png";
+  import LapizImg from "$lib/assets/images/lapiz.png";
   import { createEventDispatcher } from "svelte";
   import { deleteCronoTask, updateCronoTask } from "$lib/api/cronoTask.js";
   import { dndMoving } from "$lib/stores/dndStore.js";
@@ -208,9 +209,9 @@
       value={cronoTask.title}
     />
   {:else}
-    <p id={cronoTask.id} on:dblclick={handleTransformInput}>
-      {cronoTask.title} ✏️
-    </p>
+    <h2 id={cronoTask.id} on:dblclick={handleTransformInput}>
+      {cronoTask.title} <img src={LapizImg} alt="Edit" />
+    </h2>
   {/if}
   <p>{showedCrono}</p>
   <div class="botones">
@@ -243,52 +244,50 @@
 </div>
 
 <style lang="scss">
+  @import "../assets/styles/variablesYMixins.scss";
   .card {
-    background-color: rgb(20, 20, 20);
-    padding: 10px;
-    width: 100%;
-    text-align: center;
-    list-style: none;
-    margin-bottom: 10px;
+    @include flex(column, center, center, 10px);
+    border-radius: 20px;
+    box-shadow: $sombra-floja;
+    background-color: $cards;
+    margin-bottom: 15px;
+    padding: 20px 20px 30px 20px;
+
+    h2 {
+      cursor: pointer;
+      font-size: 28px;
+      font-family: $fuente-titulos;
+      text-align: center;
+    }
+
+    p {
+      font-size: 24px;
+    }
 
     .botones {
-      margin-bottom: 0;
-      display: flex;
-      gap: 5px;
+      @include flex(row, center, center, 20px);
 
       button {
+        width: 33px;
+        background-color: $cards;
+        border: 0;
         cursor: pointer;
-        display: block;
-        width: 35px;
-        height: 35px;
-        padding: 0;
-        margin-top: 4px;
-        margin-bottom: 4px;
-        border-radius: 6px;
-        border: none;
-
+        
         img {
-          background-color: white;
-          border-radius: 6px;
-          padding: 6px;
-          margin-top: 0;
-          width: 100%;
-          height: 100%;
+          width: 33px;
+          background-color: $cards;
+          border: 0;
         }
       }
     }
 
     .delete-button {
-      background-color: rgb(77, 18, 18);
-      color: rgb(217, 217, 217);
-      border: none;
-      padding: 5px;
-      margin-top: 10px;
-      cursor: pointer;
-      border-radius: 5px;
+      @include boton-azul(20px);
     }
     .delete-button:hover {
-      background-color: rgb(122, 28, 28);
+      cursor: pointer;
+      background-color: $azul-hover;
     }
+    
   }
 </style>

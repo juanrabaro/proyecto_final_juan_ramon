@@ -27,7 +27,7 @@
 
   let taskTypeSelected = "timer";
   let titleTimeTask = "";
-  let maxTimeTimerTask = 30;
+  let maxTimeTimerTask = null;
 
   let formValid = true;
   let errorMessage = "Fill all the fields with the correct format";
@@ -67,7 +67,7 @@
         delete res.data._id;
         timerTasks = [...timerTasks, res.data];
         titleTimeTask = "";
-        maxTimeTimerTask = 30;
+        maxTimeTimerTask = null;
       } catch (error) {
         console.error(error);
       }
@@ -166,8 +166,8 @@
 </script>
 
 <main>
-  <h1>TIME TASKS</h1>
-  <section>
+  <h1>Time Tasks</h1>
+  <section class="new-time-task">
     <select bind:value={taskTypeSelected}>
       <option value="crono" default>Crono</option>
       <option value="timer">Timer</option>
@@ -179,7 +179,7 @@
     <button on:click={createTimeTask}>Add Time Task</button>
   </section>
   {#if !formValid}
-    <p style="color: red;">{errorMessage}</p>
+    <p class="error">{errorMessage}</p>
   {/if}
   <section class="task-container">
     {#if !timerTasks.length && !cronoTasks.length}
@@ -187,7 +187,7 @@
     {:else}
       <section>
         <div>
-          <h2>Timer tasks</h2>
+          <h2>Timers</h2>
           {#if !timerTasks.length}
             <p>No timer tasks</p>
           {/if}
@@ -220,7 +220,7 @@
       </section>
       <section>
         <div>
-          <h2>Crono tasks</h2>
+          <h2>Cronos</h2>
           {#if !cronoTasks.length}
             <p>No crono tasks</p>
           {/if}
@@ -256,40 +256,95 @@
 </main>
 
 <style lang="scss">
+  @import "../../lib/assets/styles/variablesYMixins.scss";
   main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding-top: 50px;
+    @include flex(column, center, center, 20px);
+    padding-top: 15px;
+    margin-bottom: 70px;
 
-    button {
-      background-color: #ba3333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 5px 10px 5px 10px;
-      font-size: 1.1em;
+    h1 {
+      font-size: 42px;
+      font-family: $fuente-titulos;
     }
-    button:hover {
-      cursor: pointer;
-      background-color: #740808;
-      border: 1px solid #df7171;
+
+    .new-time-task {
+      @include flex(row, center, center, 10px);
+
+      select {
+        width: 30%;
+        text-align: center;
+        background-color: $inputs;
+        border-radius: 20px;
+        border: 0;
+        font-size: 19px;
+        padding: 10px 20px 10px 20px;
+        color: $texto;
+        box-shadow: $sombra;
+        appearance: none;
+        background-image: url("../../lib/assets/images/flechita.png");
+        background-repeat: no-repeat;
+        background-position: 90% center;
+      }
+      select:hover {
+        cursor: pointer;
+      }
+      input {
+        width: 30%;
+        text-align: center;
+        background-color: $inputs;
+        color: $placeholders;
+        border-radius: 20px;
+        border: 0;
+        font-size: 19px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: $sombra;
+        background-image: url("../../lib/assets/images/lupa.png");
+        background-repeat: no-repeat;
+        background-position: 93% center;
+      }
+      button {
+        width: 30%;
+        @include boton-azul(19px);
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: $azul-hover;
+      }
+    }
+
+    .error {
+      color: red;
+      font-size: 24px;
     }
 
     .task-container {
-      display: flex;
+      @include flex(row, center, start, 30px);
       gap: 20px;
-    }
+      width: 55%;
 
-    .crono-task-container {
-      border: 2px solid white;
-      overflow: scroll;
-    }
+      h2 {
+        font-size: 32px;
+        font-family: $fuente-titulos;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 15px;
+      }
 
-    .timer-task-container {
-      border: 2px solid white;
-      overflow: scroll;
+      section {
+        overflow: scroll;
+        width: 100%;
+
+        .crono-task-container {
+          // @include flex(row, center, center, 20px);
+          gap: 20px;
+          width: 100%;
+        }
+        .timer-task-container {
+          // @include flex(row, center, center, 20px);
+          gap: 20px;
+          width: 100%;
+        }
+      }
     }
   }
 </style>

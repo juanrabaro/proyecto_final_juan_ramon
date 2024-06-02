@@ -31,6 +31,7 @@
 
   main {
     @include flex(column, center, center, 20px);
+    margin-bottom: 70px;
 
     h1 {
       font-size: 44px;

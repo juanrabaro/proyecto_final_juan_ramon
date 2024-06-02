@@ -51,18 +51,26 @@
 </script>
 
 <div class="crono-tasks-container">
-  <p>{cronoTasks.indexOf(task) + 1}. {task.title}</p>
+  <h3>{task.title}</h3>
   <p>{showedTime} seconds</p>
 </div>
 
 <style lang="scss">
+  @import "../assets/styles/variablesYMixins.scss";
   .crono-tasks-container {
-    background-color: rgb(89, 3, 3);
-    display: flex;
-    flex-direction: column;
+    @include flex(column, center, center, 10px);
+    background-color: $cards;
     width: 100%;
-    margin: 10px 0 10px 0;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 20px;
+    height: 135px;
+
+    h3 {
+      font-size: 24px;
+      font-family: $fuente-titulos;
+    }
+    p {
+      font-size: 22px;
+    }
   }
 </style>

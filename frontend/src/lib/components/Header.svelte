@@ -52,7 +52,7 @@
       <ul class="ul_links">
         <li><a on:click={hideNav} href="/">Tasks</a></li>
         <li><a on:click={hideNav} href="/time-tasks">TimeTasks</a></li>
-        <li><a on:click={hideNav} href="/stadistics">Stadistics</a></li>
+        <li><a on:click={hideNav} href="/statistics">Statistics</a></li>
         <li><a on:click={hideNav} href="/profile">Profile</a></li>
         <li><button on:click={logout}>Logout</button></li>
       </ul>

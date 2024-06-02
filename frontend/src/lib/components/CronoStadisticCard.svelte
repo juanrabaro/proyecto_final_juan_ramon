@@ -64,10 +64,12 @@
     padding: 20px;
     border-radius: 20px;
     height: 135px;
+    box-shadow: $sombra-floja;
 
     h3 {
       font-size: 24px;
       font-family: $fuente-titulos;
+      color: $azul;
     }
     p {
       font-size: 22px;

@@ -11,7 +11,6 @@
   let notDoneTasks = tasks.filter((task) => !task.done);
   let filter = "all";
   let filterName = "";
-  let loading = false;
 
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
@@ -95,100 +94,104 @@
       });
     }
   }
-  async function handleGoToAddTask() {
-    loading = true;
-    await new Promise(r => setTimeout(r, 0));
-    goto("/add-task");
-    loading = false;
-  }
 </script>
 
 <main>
   <h1>Tasks</h1>
-  <button on:click={handleGoToAddTask}>Add Task</button>
-  {#if loading}
-    <div class="lds-dual-ring"></div>
-  {:else}
-    {#if tasks.length}
-      <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
-    {/if}
-    <select bind:value={filter} on:change={handleFilter}>
-      <option value="all" default>All</option>
-      <option value="done">Done</option>
-      <option value="not-done">Not Done</option>
-    </select>
+  {#if tasks.length}
+    <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
+  {/if}
+  <section class="filters-container">
+    <button
+      on:click={() => {
+        goto("/add-task");
+      }}>Add Task</button
+    >
     <input
       type="text"
       placeholder="Filter by title"
       bind:value={filterName}
       on:input={handleFilterName}
     />
-    {#if !tasks.length}
-      <p>No tasks</p>
-    {:else if tasks.length && !showedTasks.length}
-      <p>No tasks match with the filter</p>
-    {:else}
+    <select bind:value={filter} on:change={handleFilter}>
+      <option value="all" default>All</option>
+      <option value="done">Done</option>
+      <option value="not-done">Not Done</option>
+    </select>
+  </section>
+  {#if !tasks.length}
+    <p>No tasks</p>
+  {:else if tasks.length && !showedTasks.length}
+    <p>No tasks match with the filter</p>
+  {:else}
+    <section class="cards-container">
       {#each showedTasks as task (task._id)}
         <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
       {/each}
-    {/if}
+    </section>
   {/if}
 </main>
 
 <style lang="scss">
-@import "../../lib/assets/styles/variablesYMixins.scss";
+  @import "../../lib/assets/styles/variablesYMixins.scss";
   main {
-    @include flex(column, center, center, 20px);
-    background-color: $fondo;
-    padding-top: 50px;
+    @include flex(column, center, center, 10px);
 
     h1 {
       font-size: 44px;
       font-family: $fuente-titulos;
-      color: $texto;
     }
 
-    button {
-      background-color: #ba3333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 5px 10px 5px 10px;
-      font-size: 1.1em;
+    p {
+      font-size: 25px;
     }
-    button:hover {
-      cursor: pointer;
-      background-color: #740808;
-      border: 1px solid #df7171;
-    }
-    
-    .lds-dual-ring,
-    .lds-dual-ring:after {
-      box-sizing: border-box;
-    }
-    .lds-dual-ring {
-      display: inline-block;
-      width: 80px;
-      height: 80px;
-    }
-    .lds-dual-ring:after {
-      content: " ";
-      display: block;
-      width: 64px;
-      height: 64px;
-      margin: 8px;
-      border-radius: 50%;
-      border: 6.4px solid currentColor;
-      border-color: currentColor transparent currentColor transparent;
-      animation: lds-dual-ring 1.2s linear infinite;
-    }
-    @keyframes lds-dual-ring {
-      0% {
-        transform: rotate(0deg);
+
+    .filters-container {
+      @include flex(row, space-between, center, 10px);
+
+      button {
+        @include boton-azul(22px);
+        width: 40%;
+        text-align: center;
       }
-      100% {
-        transform: rotate(360deg);
+      button:hover {
+        background-color: $azul-hover;
+        cursor: pointer;
       }
+      input {
+        width: 40%;
+        text-align: center;
+        background-color: $inputs;
+        color: $placeholders;
+        border-radius: 20px;
+        border: 0;
+        font-size: 22px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: $sombra;
+        background-image: url("../../lib/assets/images/lupa.png");
+        background-repeat: no-repeat;
+        background-position: 95% center;
+      }
+      select {
+        width: 40%;
+        text-align: center;
+        background-color: $inputs;
+        border-radius: 20px;
+        border: 0;
+        font-size: 22px;
+        padding: 10px 20px 10px 20px;
+        color: $texto;
+        box-shadow: $sombra;
+        appearance: none;
+        background-image: url("../../lib/assets/images/flechita.png");
+        background-repeat: no-repeat;
+        background-position: 90% center;
+      }
+      select:hover {
+        cursor: pointer;
+      }
+    }
+    .cards-container {
     }
   }
 </style>

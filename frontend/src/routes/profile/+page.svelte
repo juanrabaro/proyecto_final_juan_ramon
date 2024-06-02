@@ -34,8 +34,8 @@
     .profile-card {
       background-color: $cards;
       @include flex(column, space-evenly, center, 0);
-      height: 470px;
-      width: 50%;
+      height: 400px;
+      width: 40%;
       box-shadow: $sombra;
       border-radius: 20px;
 

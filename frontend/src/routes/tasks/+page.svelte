@@ -12,6 +12,8 @@
   let filter = "all";
   let filterName = "";
 
+  let loading = false;
+
   function orderTasks(tasks) {
     const doneTasks = tasks.filter((task) => task.done);
     const notDoneTasks = tasks.filter((task) => !task.done);
@@ -98,37 +100,42 @@
 
 <main>
   <h1>Tasks</h1>
-  {#if tasks.length}
-    <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
-  {/if}
-  <section class="filters-container">
-    <button
-      on:click={() => {
-        goto("/add-task");
-      }}>Add Task</button
-    >
-    <input
-      type="text"
-      placeholder="Filter by title"
-      bind:value={filterName}
-      on:input={handleFilterName}
-    />
-    <select bind:value={filter} on:change={handleFilter}>
-      <option value="all" default>All</option>
-      <option value="done">Done</option>
-      <option value="not-done">Not Done</option>
-    </select>
-  </section>
-  {#if !tasks.length}
-    <p>No tasks</p>
-  {:else if tasks.length && !showedTasks.length}
-    <p>No tasks match with the filter</p>
+  {#if loading}
+    <div class="lds-dual-ring"></div>
   {:else}
-    <section class="cards-container">
-      {#each showedTasks as task (task._id)}
-        <TaskCard {task} on:delete={handleDelete} on:done={handleDone} />
-      {/each}
+    {#if tasks.length}
+      <p>Tasks done: {doneTasks.length}/{tasks.length}</p>
+    {/if}
+    <section class="filters-container">
+      <button
+        on:click={() => {
+          loading = true;
+          goto("/add-task");
+        }}>Add Task</button
+      >
+      <input
+        type="text"
+        placeholder="Filter by title"
+        bind:value={filterName}
+        on:input={handleFilterName}
+      />
+      <select bind:value={filter} on:change={handleFilter}>
+        <option value="all" default>All</option>
+        <option value="done">Done</option>
+        <option value="not-done">Not Done</option>
+      </select>
     </section>
+    {#if !tasks.length}
+      <p>No tasks</p>
+    {:else if tasks.length && !showedTasks.length}
+      <p>No tasks match with the filter</p>
+    {:else}
+      <section class="cards-container">
+        {#each showedTasks as task (task._id)}
+          <TaskCard {task} on:update={() => loading = true} on:delete={handleDelete} on:done={handleDone} />
+        {/each}
+      </section>
+    {/if}
   {/if}
 </main>
 
@@ -136,6 +143,7 @@
   @import "../../lib/assets/styles/variablesYMixins.scss";
   main {
     @include flex(column, center, center, 10px);
+    margin-bottom: 70px;
 
     h1 {
       font-size: 44px;
@@ -148,6 +156,7 @@
 
     .filters-container {
       @include flex(row, space-between, center, 10px);
+      width: 60%;
 
       button {
         @include boton-azul(22px);
@@ -170,7 +179,7 @@
         box-shadow: $sombra;
         background-image: url("../../lib/assets/images/lupa.png");
         background-repeat: no-repeat;
-        background-position: 95% center;
+        background-position: 93% center;
       }
       select {
         width: 40%;
@@ -192,6 +201,40 @@
       }
     }
     .cards-container {
+      margin-top: 27px;
+      width: 60%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .lds-dual-ring,
+    .lds-dual-ring:after {
+      box-sizing: border-box;
+    }
+    .lds-dual-ring {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-dual-ring:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 6.4px solid currentColor;
+      border-color: currentColor transparent currentColor transparent;
+      animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
 </style>

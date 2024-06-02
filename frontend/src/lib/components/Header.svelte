@@ -50,7 +50,7 @@
     <input type="checkbox" id="menu_hamburguesa" class="menu_hamburguesa" />
     {#if userHeader}
       <ul class="ul_links">
-        <li><a on:click={hideNav} href="/">Tasks</a></li>
+        <li><a on:click={hideNav} href="/tasks">Tasks</a></li>
         <li><a on:click={hideNav} href="/time-tasks">TimeTasks</a></li>
         <li><a on:click={hideNav} href="/statistics">Statistics</a></li>
         <li><a on:click={hideNav} href="/profile">Profile</a></li>

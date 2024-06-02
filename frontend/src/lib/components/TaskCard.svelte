@@ -11,6 +11,7 @@
   }
 
   async function handleUpdate() {
+    dispatch("update", task._id);
     goto(`/update-task/${task._id}`);
   }
 
@@ -19,39 +20,64 @@
   }
 </script>
 
-<ul>
-  <li class:done={task.done}>{task.title}</li>
-  <li class:done={task.done}>{task.description}</li>
+<div class="task-card">
+  <div class="title-input">
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+    <h2 on:click={handleDone} class:done={task.done}>{task.title}</h2>
+    <input
+      id={task._id}
+      on:click={handleDone}
+      type="checkbox"
+      checked={task.done}
+    />
+  </div>
+  <p class:done={task.done}>{task.description}</p>
 
-  <input id={task._id} on:click={handleDone} type="checkbox" checked={task.done} />
   <button id={task._id} on:click={handleDelete}>Delete Task</button>
   <button id={task._id} on:click={handleUpdate}>Update Task</button>
-</ul>
+</div>
 
 <style lang="scss">
-  ul {
-    background-color: rgb(20, 20, 20);
-    padding: 10px;
-    width: 20%;
-    text-align: center;
-    list-style: none;
+  @import "../assets/styles/variablesYMixins.scss";
+  .task-card {
+    @include flex(column, center, center, 10px);
+    background-color: $cards;
+    border-radius: 20px;
+    box-shadow: $sombra-floja;
+    min-width: 300px;
+    padding: 30px 30px 40px 30px;
 
-    .done {
-      text-decoration: line-through;
+    .title-input {
+      @include flex(row, center, center, 10px);
+
+      h2 {
+        font-size: 28px;
+        font-family: $fuente-titulos;
+        cursor: pointer;
+      }
+
+      input {
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+      }
+    }
+
+    p {
+      font-size: 24px;
+      margin-bottom: 15px;
     }
 
     button {
-      background-color: rgb(77, 18, 18);
-      color: rgb(217, 217, 217);
-      border: none;
-      padding: 5px 10px 5px 10px;
-      font-size: 1.1em;
-      margin-top: 10px;
-      cursor: pointer;
-      border-radius: 5px;
+      @include boton-azul(22px);
     }
     button:hover {
-      background-color: rgb(122, 28, 28);
+      background-color: $azul-hover;
+      cursor: pointer;
     }
+  }
+  .done {
+    text-decoration: line-through;
   }
 </style>

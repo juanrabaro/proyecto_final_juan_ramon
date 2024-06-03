@@ -30,10 +30,10 @@
   let maxTimeTimerTask = null;
 
   let formValid = true;
-  let errorMessage = "Fill all the fields with the correct format";
+  let errorMessage = "Fill all the fields with the correct format and title length less than 15 characters";
 
   async function createTimeTask() {
-    if (!titleTimeTask.length) {
+    if (!titleTimeTask.length || titleTimeTask.length > 15) {
       formValid = false;
       return;
     }
@@ -344,6 +344,37 @@
           gap: 20px;
           width: 100%;
         }
+      }
+    }
+  }
+  @media (max-width: 980px) {
+    main {
+      margin-top: 30px;
+      .new-time-task {
+        width: 80%;
+        select,
+        input,
+        button {
+          width: 100%;
+        }
+      }
+      .task-container {
+        width: 80%;
+      }
+    }
+  }
+  @media (max-width: 650px) {
+    main {
+      .new-time-task {
+        flex-direction: column;
+        select,
+        input,
+        button {
+          font-size: 24px;
+        }
+      }
+      .task-container {
+        flex-direction: column;
       }
     }
   }

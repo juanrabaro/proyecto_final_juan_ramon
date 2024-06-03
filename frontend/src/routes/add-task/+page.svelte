@@ -10,14 +10,28 @@
     description: "",
   };
   let formValid = true;
+  let formValidDescriptionLength = true;
+  let formValidTitleLenght = true;
   let errorMessage = "Fill all the fields";
+  let errorTitleLength = "Title must be less than 15 characters";
+  let errorDescriptionLength = "Description must be less than 23 characters";
 
   async function handleSubmit(e) {
     if (formData.title === "" || formData.description === "") {
       formValid = false;
       return;
     }
+    if (formData.description.length > 23) {
+      formValidDescriptionLength = false;
+      return;
+    }
+    if (formData.title.length > 15) {
+      formValidTitleLenght = false;
+      return;
+    }
     formValid = true;
+    formValidDescriptionLength = true;
+    formValidTitleLenght = true;
     loading = true;
     e.preventDefault();
     try {
@@ -66,6 +80,12 @@
 
         {#if !formValid}
           <p class="error">{errorMessage}</p>
+        {/if}
+        {#if !formValidDescriptionLength}
+          <p class="error">{errorDescriptionLength}</p>
+        {/if}
+        {#if !formValidTitleLenght}
+          <p class="error">{errorTitleLength}</p>
         {/if}
 
       </form>

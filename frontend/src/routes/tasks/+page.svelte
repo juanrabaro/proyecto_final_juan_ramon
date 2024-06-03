@@ -237,4 +237,25 @@
       }
     }
   }
+  @media (max-width: 670px) {
+    main {
+      margin-top: 20px;
+      .filters-container {
+        @include flex(column, center, center, 10px);
+        width: 90%;
+        button {
+          width: 90%;
+        }
+        input {
+          width: 90%;
+        }
+        select {
+          width: 90%;
+        }
+      }
+      .cards-container {
+        width: 80%;
+      }
+    }
+  }
 </style>

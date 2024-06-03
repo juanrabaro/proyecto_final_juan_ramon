@@ -177,7 +177,7 @@
 
       button {
         @include boton-azul(24px);
-        width: 30%;
+        width: 40%;
       }
       button:hover {
         cursor: pointer;
@@ -232,6 +232,22 @@
       }
       100% {
         transform: rotate(360deg);
+      }
+    }
+  }
+  @media (max-width: 670px) {
+    main {
+      .register-card {
+        width: 90%;
+        margin-top: 20px;
+
+        button {
+          width: 50%;
+        }
+      }
+      .login {
+        text-align: center;
+        margin-bottom: 40px;
       }
     }
   }

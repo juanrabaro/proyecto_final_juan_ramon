@@ -182,4 +182,17 @@
       }
     }
   }
+
+  @media (max-width: 670px) {
+    main {
+      .login-card {
+        width: 90%;
+        margin-top: 20px;
+      }
+      .register {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+    }
+  }
 </style>

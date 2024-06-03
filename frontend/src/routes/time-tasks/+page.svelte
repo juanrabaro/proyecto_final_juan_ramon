@@ -126,14 +126,14 @@
 
   // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
   function orderArray(orderedArray, updatedArray) {
-    let newTimerTasks = [];
-    newTimerTasks = orderedArray.map((task) => {
+    let newTimeTasks = [];
+    newTimeTasks = orderedArray.map((task) => {
       const taskFound = updatedArray.find((taskRes) => {
         return taskRes.id === task.id;
       });
       return taskFound ? taskFound : task;
     });
-    return newTimerTasks;
+    return newTimeTasks;
   }
   async function handleRefreshTimerTasks() {
     try {

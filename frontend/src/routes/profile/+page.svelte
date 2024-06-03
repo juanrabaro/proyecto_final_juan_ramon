@@ -68,4 +68,23 @@
       }
     }
   }
+  @media (max-width: 1000px) {
+    main {
+      .profile-card {
+        width: 80%;
+        margin-top: 20px;
+        padding: 10px;
+        
+        .info-container {
+          p, span {
+            font-size: 23px;
+          }
+        }
+
+        button {
+          width: 50%;
+        }
+      }
+    }
+  }
 </style>

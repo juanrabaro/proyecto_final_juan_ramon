@@ -9,7 +9,7 @@
   let id;
   page.subscribe(({ params }) => {
     id = params.id;
-    console.log(id);
+    // console.log(id);
   });
 
   let loading = false;
@@ -24,7 +24,7 @@
   onMount(async () => {
     try {
       const res = await getTaskById(id, data.token);
-      console.log(res);
+      // console.log(res);
       task = res.data;
     } catch (error) {
       console.log(error);
@@ -41,7 +41,7 @@
     loading = true;
     try {
       const res = await updateTask(task, data.token);
-      console.log(res);
+      // console.log(res);
       goto("/");
     } catch (error) {
       console.error(error);

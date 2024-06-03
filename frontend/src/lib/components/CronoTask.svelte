@@ -156,7 +156,7 @@
 
     try {
       const res = await deleteCronoTask(taskId);
-      console.log(res);
+      // console.log(res);
 
       dispatch("deleteCronoTask", taskId);
     } catch (error) {
@@ -182,7 +182,7 @@
   async function handleUpdateTitleTimeTask(e) {
     const taskId = e.target.id;
 
-    console.log("crono");
+    // console.log("crono");
     const cronoTaskFound = cronoTasks.find((task) => {
       return task.id === taskId;
     });
@@ -191,7 +191,7 @@
 
     try {
       const res = await updateCronoTask(cronoTaskFound);
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.error(error);
     }

@@ -42,7 +42,7 @@
     if (taskTypeSelected === "crono") {
       try {
         const res = await addCronoTask({ title: titleTimeTask });
-        console.log(res);
+        // console.log(res);
         res.data.id = res.data._id;
         delete res.data._id;
         cronoTasks = [...cronoTasks, res.data];
@@ -62,7 +62,7 @@
           title: titleTimeTask,
           maxTime: maxTimeTimerTask,
         });
-        console.log(res);
+        // console.log(res);
         res.data.id = res.data._id;
         delete res.data._id;
         timerTasks = [...timerTasks, res.data];
@@ -124,7 +124,6 @@
     });
   }
 
-  // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
   function orderArray(orderedArray, updatedArray) {
     let newTimeTasks = [];
     newTimeTasks = orderedArray.map((task) => {
@@ -143,7 +142,7 @@
       let resTimerTasks = await getTimerTasks(tokenFormated);
       resTimerTasks = replaceId(resTimerTasks.data);
 
-      // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
+  
       timerTasks = orderArray(timerTasks, resTimerTasks);
     } catch (error) {
       console.error(error);
@@ -157,7 +156,7 @@
       let resCronoTasks = await getCronoTasks(tokenFormated);
       resCronoTasks = replaceId(resCronoTasks.data);
 
-      // CAMBIAR PARA TRAER ORDEN DEL LOCALSTORAGE
+  
       cronoTasks = orderArray(cronoTasks, resCronoTasks);
     } catch (error) {
       console.error(error);

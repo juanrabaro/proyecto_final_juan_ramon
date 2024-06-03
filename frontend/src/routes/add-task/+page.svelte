@@ -36,7 +36,7 @@
     e.preventDefault();
     try {
       const res = await addTask(formData, data.token);
-      console.log(res);
+      // console.log(res);
 
       formData = {
         title: "",

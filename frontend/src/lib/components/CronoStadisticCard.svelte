@@ -1,7 +1,7 @@
 <script>
   import { Timer } from "easytimer.js";
 
-  export let cronoTasks;
+  // export let cronoTasks;
   export let task;
 
   const timer = new Timer();

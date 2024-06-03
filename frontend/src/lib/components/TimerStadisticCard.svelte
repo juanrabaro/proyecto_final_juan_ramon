@@ -1,14 +1,14 @@
 <script>
   import { Timer } from "easytimer.js";
 
-  export let timerTasks;
+  // export let timerTasks;
   export let task;
 
   const timer = new Timer();
   let cronoState = task.running;
   let showedTime = "00:00:00";
 
-  console.log(task);
+  // console.log(task);
 
   if (cronoState === "running") {
     const tiempoTotalReal =

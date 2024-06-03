@@ -271,9 +271,9 @@
       value={timerTask.title}
     />
   {:else}
-    <p id={timerTask.id} on:dblclick={handleTransformInput}>
+    <h2 id={timerTask.id} on:dblclick={handleTransformInput}>
       {timerTask.title} <img src={LapizImg} alt="Edit" />
-    </p>
+    </h2>
   {/if}
   <p>{showedCrono}</p>
   <div class="botones">

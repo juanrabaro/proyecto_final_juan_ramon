@@ -22,7 +22,7 @@
     e.preventDefault();
     try {
       const res = await login(formData);
-      console.log(res);
+      // console.log(res);
       error = false;
       loading = true;
 

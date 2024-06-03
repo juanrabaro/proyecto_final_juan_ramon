@@ -56,7 +56,7 @@
     if (validate(e)) {
       try {
         const res = await register(formData);
-        console.log(res);
+        // console.log(res);
         loading = true;
 
         await loginStore(formData);

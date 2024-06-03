@@ -27,7 +27,7 @@
 
     try {
       const res = await deleteTask(taskId, data.token);
-      console.log(res);
+      // console.log(res);
 
       tasks = tasks.filter((task) => task._id !== taskId);
       showedTasks = showedTasks.filter((task) => task._id !== taskId);
@@ -57,7 +57,7 @@
 
     try {
       const res = await updateTask(taskFound, data.token);
-      console.log(res);
+      // console.log(res);
 
       showedTasks = orderTasks(showedTasks);
       doneTasks = tasks.filter((task) => task.done);

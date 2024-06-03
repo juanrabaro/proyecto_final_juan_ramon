@@ -169,4 +169,56 @@
       }
     }
   }
+  @media (max-width: 800px) {
+    main {
+      margin-top: 20px;
+
+      .new-task-card {
+        width: 80%;
+        height: 500px;
+
+        h1 {
+          font-size: 40px;
+        }
+
+        form {
+          input {
+            font-size: 24px;
+          }
+          textarea {
+            font-size: 24px;
+          }
+        }
+        
+        button {
+          width: 40%;
+        }
+      }
+    }
+  }
+  @media (max-width: 450px) {
+    main {
+      .new-task-card {
+        width: 90%;
+        height: 500px;
+
+        h1 {
+          font-size: 32px;
+        }
+
+        form {
+          input {
+            font-size: 20px;
+          }
+          textarea {
+            font-size: 20px;
+          }
+        }
+        
+        button {
+          width: 50%;
+        }
+      }
+    }
+  }
 </style>

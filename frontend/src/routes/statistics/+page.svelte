@@ -54,4 +54,25 @@
       }
     }
   }
+  @media (max-width: 1000px) {
+    main {
+      margin-top: 20px;
+
+      .container {
+        width: 80%;
+        padding: 10px;
+        
+        section {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @media (max-width: 720px) {
+    main {
+      .container {
+        flex-direction: column;
+      }
+    }
+  }
 </style>

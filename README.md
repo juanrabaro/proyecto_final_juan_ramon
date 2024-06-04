@@ -1,12 +1,17 @@
-# proyecto_final_juan_ramon
+# Proyecto final Juan Ramón
 
-## Para iniciar el proyecto en local:
+## Enlace para ver el proyecto
+
+> [!IMPORTANT]
+> El despliegue del backend al ser una capa gratuita la que estoy dentro de la plataforma es necesario cuando se queda un tiempo si usarse esperar 1 minuto aproximadamente para que funciona el backend. Se puede comprobar si hay que esperar o no dependiendo de si el siguiente enlace muestra un mensaje o no, en cuyo caso habrá que esperar.
+
+[Enlace al proyecto](https://task-master-3q3ne1zqx-juanrabaros-projects.vercel.app/)
+
+## Para desplegar el proyecto en local
 
 **1 -** Después de hacer el git clone vete a la ruta del proyecto
 
-**2 -** Debes tener iniciado Docker ya que la base de datos en MongoDB se ejecuta ahí.
-
-**3 -** Desde la ruta raíz del proyecto ejecutar lo siguiente:
+**2 -** Desde la esa misma ruta(ruta raíz) ejecuta lo siguiente:
 
 ```javascript
 npm install
@@ -18,7 +23,6 @@ Y después:
 npm run dual
 ```
 
-Esto ejecutará el **contenedor de docker(puerto 27018)**, el **backend (puerto 4000)** y **frontend (puerto 5173)** a la misma vez.
+Esto ejecutará todo lo necesario, el **backend (puerto 4000)** y **frontend (puerto 5173)** a la misma vez.
 
-> [!IMPORTANT]
-> Para el frontend no hay validaciones en ningún sitio todavía porque veo mejor centrarme en las funcionalidades básicas antes.
+La base de datos está desplegada en **MongoDB Atlas** así que no es necesario usar **Docker** para desplegar una base de datos en local.

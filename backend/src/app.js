@@ -21,7 +21,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/api/health', (req, res, next) => {
+app.use('/api/healthz', (req, res, next) => {
   res.status(200).json({ message: 'Status 200 OK' })
 })
 

@@ -1,4 +1,5 @@
 <script>
+  import Cookies from 'js-cookie';
   import { goto } from "$app/navigation";
   import { loginStore } from "$lib/stores/authStore.js";
   import { register } from "$lib/api/auth.js";
@@ -57,6 +58,8 @@
       try {
         const res = await register(formData);
         // console.log(res);
+        Cookies.set('token', res.data.token);
+        
         loading = true;
 
         await loginStore(formData);

@@ -8,6 +8,8 @@ export const load = async ({ request }: any) => {
   const token = request.headers.get('cookie')
   let res;
 
+  console.log(token);
+
   if (token) {
 
     let tokenFormated = '';

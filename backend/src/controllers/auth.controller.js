@@ -28,6 +28,7 @@ export const register = async (req, res) => {
       email: savedUser.email,
       createdAt: savedUser.createdAt,
       updatedAt: savedUser.updatedAt,
+      token: accessToken,
     })
 
   } catch (error) {
@@ -57,6 +58,7 @@ export const login = async (req, res) => {
       email: userFound.email,
       createdAt: userFound.createdAt,
       updatedAt: userFound.updatedAt,
+      token: accessToken,
     })
 
   } catch (error) {

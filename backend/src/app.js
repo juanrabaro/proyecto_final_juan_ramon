@@ -12,12 +12,18 @@ import timerTaskRouter from './routes/timerTask.routes.js'
 const app = express()
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: function (origin, callback) {
+    callback(null, true)
+  },
   credentials: true
 }))
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
+
+app.use('/api/health', (req, res, next) => {
+  res.status(200).json({ message: 'Status 200 OK' })
+})
 
 app.use('/api', authRouter)
 app.use('/api', taskRouter)

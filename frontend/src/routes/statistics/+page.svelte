@@ -14,13 +14,13 @@
     <section>
       <h2>Cronos</h2>
       {#each cronoTasks as task (task._id)}
-      <CronoStadisticCard {task} {cronoTasks} />
+      <CronoStadisticCard {task} />
       {/each}
     </section>
     <section>
       <h2>Timers</h2>
       {#each timerTasks as task (task._id)}
-      <TimerStadisticCard {task} {timerTasks} />
+      <TimerStadisticCard {task} />
       {/each}
     </section>
   </section>

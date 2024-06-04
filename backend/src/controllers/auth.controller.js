@@ -84,12 +84,16 @@ export const verifyToken = async (req, res) => {
     })
 
     const userFound = await User.findOne({ _id: tokenUser.id })
-    // console.log("USERFOUND", userFound);
-    res.status(200).json({
-      id: userFound._id,
-      userName: userFound.username,
-      email: userFound.email
-    })
+    console.log("USERFOUND", userFound);
+    if (userFound === null) {
+      return res.status(401).json({ message: 'User not found' })
+    } else {
+      res.status(200).json({
+        id: userFound._id,
+        userName: userFound.username,
+        email: userFound.email
+      })
+    }
   } catch (error) {
     console.log(error);
   }

@@ -2,10 +2,12 @@
 
 ## Enlace para ver el proyecto
 
+[Enlace al despliegue del frontend](https://task-master-3q3ne1zqx-juanrabaros-projects.vercel.app/)
+
 > [!IMPORTANT]
 > El despliegue del backend al ser una capa gratuita la que estoy dentro de la plataforma es necesario cuando se queda un tiempo si usarse esperar 1 minuto aproximadamente para que funciona el backend. Se puede comprobar si hay que esperar o no dependiendo de si el siguiente enlace muestra un mensaje o no, en cuyo caso habrá que esperar.
 
-[Enlace al proyecto](https://task-master-3q3ne1zqx-juanrabaros-projects.vercel.app/)
+[Enlace repositorio despliegue backend](https://github.com/juanrabaro/despliegue_proyec_final_juan_ramon.git)
 
 ## Para desplegar el proyecto en local
 

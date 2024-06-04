@@ -1,4 +1,4 @@
-import { myAxios } from "./myAxios.js"
+import myAxios from "./myAxios.js"
 
 export const getTasks = (token) => myAxios.get('/tasks', {
   headers: {

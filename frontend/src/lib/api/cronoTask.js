@@ -1,4 +1,4 @@
-import { myAxios } from "./myAxios.js"
+import myAxios from "./myAxios.js"
 
 export const getCronoTasks = (token) => myAxios.get('/crono-tasks', {
   headers: {

@@ -12,19 +12,25 @@
   <h1>Statistics</h1>
   <section class="container">
     <section>
-      <h2>Cronos</h2>
-      {#each cronoTasks as task (task._id)}
-      <CronoStadisticCard {task} />
+      <h2>Timers</h2>
+      {#if timerTasks.length === 0}
+        <p class="no-tasks">No timer tasks</p>
+      {/if}
+      {#each timerTasks as task (task._id)}
+        <TimerStadisticCard {task} />
       {/each}
     </section>
     <section>
-      <h2>Timers</h2>
-      {#each timerTasks as task (task._id)}
-      <TimerStadisticCard {task} />
+      <h2>Cronos</h2>
+      {#if cronoTasks.length === 0}
+        <p class="no-tasks">No crono tasks</p>
+      {/if}
+      {#each cronoTasks as task (task._id)}
+        <CronoStadisticCard {task} />
       {/each}
     </section>
   </section>
-  </main>
+</main>
 
 <style lang="scss">
   @import "../../lib/assets/styles/variablesYMixins.scss";
@@ -41,7 +47,7 @@
     .container {
       @include flex(row, center, start, 20px);
       width: 60%;
-      
+
       section {
         @include flex(column, center, center, 15px);
         width: 38%;
@@ -50,6 +56,10 @@
           text-align: center;
           font-size: 32px;
           font-family: $fuente-titulos;
+        }
+
+        .no-tasks {
+          font-size: 24px;
         }
       }
     }
@@ -61,7 +71,7 @@
       .container {
         width: 80%;
         padding: 10px;
-        
+
         section {
           width: 100%;
         }

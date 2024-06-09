@@ -182,13 +182,13 @@
   {/if}
   <section class="task-container">
     {#if !timerTasks.length && !cronoTasks.length}
-      <p>No time tasks</p>
+      <p class="no-tasks">No time tasks</p>
     {:else}
       <section>
         <div>
           <h2>Timers</h2>
           {#if !timerTasks.length}
-            <p>No timer tasks</p>
+            <p class="no-tasks">No timer tasks</p>
           {/if}
         </div>
         <section
@@ -221,7 +221,7 @@
         <div>
           <h2>Cronos</h2>
           {#if !cronoTasks.length}
-            <p>No crono tasks</p>
+            <p class="no-tasks">No crono tasks</p>
           {/if}
         </div>
         <section
@@ -320,6 +320,11 @@
       @include flex(row, center, start, 30px);
       gap: 20px;
       width: 55%;
+
+      .no-tasks {
+        font-size: 24px;
+        text-align: center;
+      }
 
       h2 {
         font-size: 32px;
